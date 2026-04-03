@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Ejecuta nixos-rebuild desde cualquier directorio.
+# Uso: ./rebuild [switch|boot|test|dry-run] [argumentos extra]
+FLAKE="$(dirname "$(readlink -f "$0")")"
+ACTION="${1:-switch}"
+shift 2>/dev/null
+exec sudo nixos-rebuild "$ACTION" --impure --flake "$FLAKE" "$@"
