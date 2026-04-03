@@ -1,0 +1,11 @@
+/* colors — tema hacker/matrix */
+
+* {
+  al:   #00000000;        /* transparente */
+  bg:   #0d0d0ddd;        /* fondo oscuro semitransparente */
+  bga:  #00ff4122;        /* selección verde tenue */
+  bar:  #00ff41ff;        /* verde matrix (prompt/entry) */
+  fg:   #00ff41ff;        /* texto verde */
+  ac:   #00ff41ff;        /* acento verde */
+  fgd:  #1a6b1aff;        /* verde dim (texto secundario) */
+}

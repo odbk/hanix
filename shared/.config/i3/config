@@ -1,0 +1,7 @@
+# ~/.config/i3/config
+set $mod Mod1
+font pango:JetBrainsMono Nerd Font 11
+
+include ~/.config/i3/general.conf
+include ~/.config/i3/workspaces.conf
+include ~/.config/i3/bindings.conf

@@ -1,0 +1,8 @@
+# No ignorar flake.lock — pinia las dependencias exactas
+# flake.lock
+
+# Archivos de editor
+.direnv/
+.envrc
+*.swp
+*~
