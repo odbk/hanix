@@ -48,20 +48,20 @@
     nixosConfigurations = {
       # nixos-rebuild switch --flake . (sin tag, usa el hostname actual)
       hanixcel = mkNixosSystem [
-        /etc/nixos/hardware-configuration.nix
+        ./hardware-configuration.nix
         ./shared/appearance.nix
         { networking.hostName = "hanixcel"; }
       ];
 
       # Alias para instalaciones frescas (hostname por defecto de NixOS)
       nixos = mkNixosSystem [
-        /etc/nixos/hardware-configuration.nix
+        ./hardware-configuration.nix
         ./shared/appearance.nix
         { networking.hostName = "hanixcel"; }
       ];
 
       hanix-vm = mkNixosSystem [
-        /etc/nixos/hardware-configuration.nix
+        ./hardware-configuration.nix
         ./shared/vmware.nix
         ./shared/appearance.nix
         { networking.hostName = "hanix-vm"; }

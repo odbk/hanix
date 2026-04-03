@@ -4,4 +4,11 @@
 FLAKE="$(dirname "$(readlink -f "$0")")"
 ACTION="${1:-switch}"
 shift 2>/dev/null
-exec sudo nixos-rebuild "$ACTION" --impure --flake "$FLAKE" "$@"
+
+# Copia el hardware config local si no existe en el repo
+if [ ! -f "$FLAKE/hardware-configuration.nix" ]; then
+    echo "Copiando hardware-configuration.nix desde /etc/nixos..."
+    cp /etc/nixos/hardware-configuration.nix "$FLAKE/hardware-configuration.nix"
+fi
+
+exec sudo nixos-rebuild "$ACTION" --flake "$FLAKE" "$@"

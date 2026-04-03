@@ -1,6 +1,9 @@
 # No ignorar flake.lock — pinia las dependencias exactas
 # flake.lock
 
+# Hardware config — específica de cada máquina, no se comparte
+hardware-configuration.nix
+
 # Archivos de editor
 .direnv/
 .envrc
