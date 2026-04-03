@@ -12,6 +12,9 @@
 {
   hanix.mainUser = "hanix";  # cambia por tu username real
 
+  # Si clonaste el repo en otro directorio, indícalo aquí:
+  # hanix.flakePath = "/home/hanix/mi-flake";
+
   # ── Paquetes personales ────────────────────────────────────
   # environment.systemPackages = with pkgs; [
   #   alacritty

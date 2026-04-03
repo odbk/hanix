@@ -16,6 +16,11 @@
   boot.kernelParams    = [ "quiet" "loglevel=3" "systemd.show_status=false" ];
   boot.consoleLogLevel = 3;
 
+  programs.bash.shellAliases = {
+    rebuild     = "sudo nixos-rebuild switch --impure --flake ${config.hanix.flakePath}";
+    rebuild-dry = "sudo nixos-rebuild dry-run --impure --flake ${config.hanix.flakePath}";
+  };
+
   # Fastfetch al abrir terminal interactivo
   programs.bash.interactiveShellInit = ''
     fastfetch

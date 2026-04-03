@@ -36,33 +36,28 @@
     ];
 
     # Función para crear configuraciones NixOS con argumentos comunes
-    mkNixosSystem = hostName: extraModules: nixpkgs.lib.nixosSystem {
+    mkNixosSystem = extraModules: nixpkgs.lib.nixosSystem {
       inherit system;
       modules = commonModules ++ extraModules;
-      specialArgs = { 
+      specialArgs = {
         inherit pkgs unstablePkgs;
         inherit inputs;
       };
     };
   in {
     nixosConfigurations = {
-      laptop = mkNixosSystem "laptop" [
-        ./hosts/laptop.nix
+      # nixos-rebuild switch --flake . (sin tag, usa el hostname actual)
+      hanixcel = mkNixosSystem [
+        /etc/nixos/hardware-configuration.nix
         ./shared/appearance.nix
         { networking.hostName = "hanixcel"; }
       ];
 
-      vm = mkNixosSystem "vm" [
-        ./hosts/vm.nix
+      hanix-vm = mkNixosSystem [
+        /etc/nixos/hardware-configuration.nix
         ./shared/vmware.nix
         ./shared/appearance.nix
         { networking.hostName = "hanix-vm"; }
-      ];
-
-      pc = mkNixosSystem "pc" [
-        ./hosts/pc.nix
-        ./shared/appearance.nix
-        { networking.hostName = "hanixcel"; }
       ];
     };
   };
