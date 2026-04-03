@@ -53,6 +53,13 @@
         { networking.hostName = "hanixcel"; }
       ];
 
+      # Alias para instalaciones frescas (hostname por defecto de NixOS)
+      nixos = mkNixosSystem [
+        /etc/nixos/hardware-configuration.nix
+        ./shared/appearance.nix
+        { networking.hostName = "hanixcel"; }
+      ];
+
       hanix-vm = mkNixosSystem [
         /etc/nixos/hardware-configuration.nix
         ./shared/vmware.nix
