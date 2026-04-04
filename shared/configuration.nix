@@ -24,6 +24,7 @@
   programs.bash.shellAliases = {
     rebuild     = "${config.hanix.flakePath}/rebuild";
     rebuild-dry = "${config.hanix.flakePath}/rebuild dry-run";
+    update      = "(cd ${config.hanix.flakePath} && nix flake update && ./rebuild)";
     hex         = "xxd";
   };
 

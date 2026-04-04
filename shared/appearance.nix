@@ -163,6 +163,12 @@ in
     feh xwallpaper         # fondo de pantalla
     lxappearance           # cambiar temas GTK fácilmente
     bibata-cursors         # cursor theme moderno
+    papirus-icon-theme     # iconos dark coherentes
+    (catppuccin-gtk.override {
+      accents = [ "green" ];
+      size    = "standard";
+      variant = "mocha";
+    })
     pavucontrol
     xterm
     arandr
