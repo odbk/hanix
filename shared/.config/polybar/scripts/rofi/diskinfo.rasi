@@ -1,0 +1,47 @@
+configuration {
+    font: "JetBrainsMono Nerd Font 10";
+    hide-scrollbar: true;
+}
+
+* {
+    bg:  #1e1e2eFF;
+    ac:  #00ff4133;
+    fg:  #00ff41FF;
+    dim: #1a6b1aFF;
+    al:  #00000000;
+}
+
+window {
+    background-color: @bg;
+    text-color:       @fg;
+    border:           0px 0px 2px 0px;
+    border-color:     @dim;
+    border-radius:    0px;
+    width:            560px;
+    location:         center;
+    x-offset:         0;
+    y-offset:         0;
+}
+
+mainbox {
+    background-color: @al;
+    border:           0px;
+    children:         [ message ];
+    padding:          0px;
+    spacing:          0px;
+}
+
+message {
+    background-color: @al;
+    text-color:       @fg;
+    padding:          20px 24px;
+}
+
+textbox {
+    background-color: @al;
+    text-color:       @fg;
+    expand:           true;
+    horizontal-align: 0;
+    vertical-align:   0.5;
+    font:             "JetBrainsMono Nerd Font 10";
+}
