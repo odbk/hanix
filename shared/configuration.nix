@@ -24,11 +24,22 @@
   programs.bash.shellAliases = {
     rebuild     = "${config.hanix.flakePath}/rebuild";
     rebuild-dry = "${config.hanix.flakePath}/rebuild dry-run";
+    hex         = "xxd";
   };
 
-  # Fastfetch al abrir terminal interactivo
+  # Fastfetch + funciones de hacking al abrir terminal interactivo
   programs.bash.interactiveShellInit = ''
     fastfetch
+
+    # ── Hacking utils ──────────────────────────────────────
+    http()  { python3 -m http.server "''${1:-8080}"; }
+    ports() { nmap -sV --open -T4 "$@"; }
+    b64e()  { echo -n "''${1:-$(cat)}" | base64 -w0; echo; }
+    b64d()  { echo -n "''${1:-$(cat)}" | base64 -d; echo; }
+    urle()  { python3 -c "import sys,urllib.parse; print(urllib.parse.quote(sys.stdin.read().strip()))"; }
+    urld()  { python3 -c "import sys,urllib.parse; print(urllib.parse.unquote(sys.stdin.read().strip()))"; }
+    vpnip() { ip addr 2>/dev/null | grep -A2 'tun\|wg' | grep 'inet ' | awk '{print $2}' | cut -d/ -f1; }
+    myip()  { curl -s ifconfig.me; echo; }
   '';
 
   services.pipewire = {

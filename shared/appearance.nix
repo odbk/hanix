@@ -42,6 +42,8 @@ in
     Xft.hinting: 1
     Xft.rgba: rgb
     Xft.lcdfilter: lcddefault
+    Xcursor.theme: Bibata-Modern-Classic
+    Xcursor.size: 24
   '';
 
   # Sincroniza dotfiles al home del usuario principal en cada nixos-rebuild switch
@@ -61,8 +63,9 @@ in
               chmod +x "${home}/.config/polybar/scripts/nixupdates.sh" 2>/dev/null || true
               chmod +x "${home}/.config/polybar/scripts/powermenu.sh"  2>/dev/null || true
               chmod +x "${home}/.config/polybar/scripts/diskinfo.sh"   2>/dev/null || true
-              chmod +x "${home}/.config/polybar/scripts/ip-local.sh"   2>/dev/null || true
-              chmod +x "${home}/.config/polybar/scripts/ip-vpn.sh"     2>/dev/null || true
+              chmod +x "${home}/.config/polybar/scripts/ip-local.sh"    2>/dev/null || true
+              chmod +x "${home}/.config/polybar/scripts/ip-vpn.sh"      2>/dev/null || true
+              chmod +x "${home}/.config/polybar/scripts/lockscreen.sh"  2>/dev/null || true
             fi
             if [ -f /etc/skel/.Xresources ] && [ -d "${home}" ]; then
               install -o "${u}" -g users /etc/skel/.Xresources "${home}/.Xresources"
@@ -135,6 +138,8 @@ in
     GDK_SCALE = "1";
     GDK_DPI_SCALE = "1";
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+    XCURSOR_THEME = "Bibata-Modern-Classic";
+    XCURSOR_SIZE  = "24";
   };
 
   # polybar desactivado — se usa i3bar (integrado en i3)
@@ -146,7 +151,7 @@ in
 
   environment.systemPackages = with pkgs; [
     i3
-    i3lock
+    i3lock-color
     dunst
     kitty
     rofi
@@ -157,6 +162,7 @@ in
     flameshot              # captura interactiva con anotaciones
     feh xwallpaper         # fondo de pantalla
     lxappearance           # cambiar temas GTK fácilmente
+    bibata-cursors         # cursor theme moderno
     pavucontrol
     xterm
     arandr

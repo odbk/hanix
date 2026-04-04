@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# HaNiX — script de configuración inicial
+# Ejecutar después de clonar el repo, antes del primer rebuild.
+
+FLAKE="$(dirname "$(readlink -f "$0")")"
+GREEN='\033[1;32m'
+DIM='\033[0;90m'
+R='\033[0m'
+
+ok()   { echo -e "${GREEN}[✓]${R} $1"; }
+info() { echo -e "${DIM}[·]${R} $1"; }
+
+echo -e "\n${GREEN}  HaNiX Setup${R}\n"
+
+# ── personal.nix ─────────────────────────────────────────
+if grep -q 'mainUser = "hanix"' "$FLAKE/shared/personal.nix" 2>/dev/null; then
+    echo -e "\n  Edita ${GREEN}shared/personal.nix${R} con tu usuario antes de continuar:"
+    echo -e "  ${DIM}hanix.mainUser = \"tuusuario\";${R}"
+    echo -e "  ${DIM}hanix.plymouthGpuModules = [ \"amdgpu\" ]; # o i915 / nouveau${R}\n"
+    read -rp "  ¿Continuar de todas formas? [s/N] " ans
+    [[ "$ans" =~ ^[sS] ]] || exit 0
+fi
+
+git -C "$FLAKE" update-index --skip-worktree shared/personal.nix 2>/dev/null
+ok "personal.nix marcado como skip-worktree"
+
+# ── Directorios estándar ──────────────────────────────────
+for dir in Imágenes Documentos Descargas Proyectos CTF Tools Hacking; do
+    mkdir -p "$HOME/$dir"
+    ok "~/$dir"
+done
+
+# ── Resumen ───────────────────────────────────────────────
+echo -e "\n${GREEN}  Listo.${R} Ahora ejecuta:\n"
+echo -e "    ${GREEN}./rebuild boot${R}   ← primera vez (instala Plymouth)"
+echo -e "    ${GREEN}./rebuild${R}        ← resto de veces\n"
