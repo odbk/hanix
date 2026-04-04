@@ -46,7 +46,6 @@
     },
     { "type": "cpu",      "key": "  CPU    " },
     { "type": "gpu",      "key": "  GPU    " },
-    { "type": "memory",   "key": "  RAM    " },
-    { "type": "disk",     "key": "  Disk   " }
+    { "type": "memory",   "key": "  RAM    " }
   ]
 }
