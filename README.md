@@ -79,7 +79,15 @@ git clone https://github.com/odbk/hanix
 cd hanix
 ```
 
-### 2. Configuración personal
+### 2. Setup inicial
+
+```bash
+./setup
+```
+
+Crea los directorios estándar (`~/Images`, `~/CTF`, `~/Hacking`...) y marca `personal.nix` como skip-worktree.
+
+### 3. Configuración personal
 
 Edita `shared/personal.nix`:
 
@@ -105,7 +113,7 @@ Activa skip-worktree para que git no suba tus datos:
 git update-index --skip-worktree shared/personal.nix
 ```
 
-### 3. Aplicar
+### 4. Aplicar
 
 ```bash
 ./rebuild

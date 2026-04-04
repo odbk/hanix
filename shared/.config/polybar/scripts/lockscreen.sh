@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 i3lock \
+    --image="$HOME/.config/fastfetch/logo.png" \
+    --center \
     --color=1e1e2e \
     --ring-color=00ff41ff \
     --inside-color=1e1e2e99 \

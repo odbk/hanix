@@ -25,7 +25,7 @@ git -C "$FLAKE" update-index --skip-worktree shared/personal.nix 2>/dev/null
 ok "personal.nix marcado como skip-worktree"
 
 # ── Directorios estándar ──────────────────────────────────
-for dir in Imágenes Documentos Descargas Proyectos CTF Tools Hacking; do
+for dir in Images Documents Downloads Projects CTF Tools Hacking; do
     mkdir -p "$HOME/$dir"
     ok "~/$dir"
 done

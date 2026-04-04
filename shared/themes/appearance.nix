@@ -70,6 +70,10 @@ in
             if [ -f /etc/skel/.Xresources ] && [ -d "${home}" ]; then
               install -o "${u}" -g users /etc/skel/.Xresources "${home}/.Xresources"
             fi
+            # Cursor theme — necesario para que X11 lo aplique
+            mkdir -p "${home}/.icons/default"
+            echo -e '[Icon Theme]\nInherits=Bibata-Modern-Classic' \
+              > "${home}/.icons/default/index.theme"
           '')
         (lib.attrNames normalUsers);
     deps = [ "etc" ];
@@ -79,6 +83,9 @@ in
   ## SESSION INIT          ##
   ###########################
   services.xserver.displayManager.sessionCommands = ''
+    # ── Cursor theme ─────────────────────────────────────────────────────────
+    [ -f "$HOME/.Xresources" ] && ${pkgs.xorg.xrdb}/bin/xrdb -merge "$HOME/.Xresources"
+
     # ── Marcar como primary el monitor más ancho ──────────────────────────
     # Encuentra el monitor conectado con mayor resolución horizontal y lo
     # establece como primary (corrige el caso en que X elige el secundario).
