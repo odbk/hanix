@@ -3,9 +3,6 @@
 {
   virtualisation.docker.enable = true;
 
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.host.enableExtensionPack = true;
-
   services.gvfs.enable = true;
   environment.pathsToLink = [ "/share/dbus-1" "/share/gvfs" ];
 
