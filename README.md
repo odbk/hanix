@@ -1,80 +1,100 @@
 # HaNiX
 
-NixOS flake compartido — entorno hacker/cyberpunk con i3, polybar, greetd y nixvim.
+NixOS flake orientado a hacking y ciberseguridad — entorno hacker con i3, polybar, greetd y nixvim, con más de 50 herramientas de seguridad preinstaladas y configuradas.
 
-## Características
+![Login](screenshots/greetd.png)
+![Desktop](screenshots/screen1.png)
+![Shell](screenshots/shell.png)
 
-- **i3** con gaps, picom (transparencias), wallpaper automático
-- **Polybar** tema matrix verde con módulos: i3, bluetooth, wifi, volumen, CPU, RAM, disco, reloj
-- **greetd + tuigreet** como display manager con ASCII art HaNiX
+## Herramientas de seguridad incluidas
+
+### Explotación y Post-explotación
+`metasploit` `sqlmap` `exploitdb` `msfpc` `netexec` `smbmap` `enum4linux`
+
+### Escaneo y Reconocimiento
+`nmap` `masscan` `amass` `subfinder` `theharvester` `dnsenum` `whatweb` `nikto` `gobuster` `ffuf` `dirb` `dirbuster` `burpsuite` `caido`
+
+### Ingeniería Inversa y Análisis Binario
+`ghidra` `radare2` `cutter` `binwalk` `gdb` `pwndbg` `ltrace` `strace` `checksec`
+
+### Criptografía y Fuerza Bruta
+`hashcat` `john` `thc-hydra` `cewl` `crunch` `wfuzz` `seclists` `rockyou` `wordlists`
+
+### Red y MITM
+`wireshark` `ettercap` `mitmproxy` `bettercap` `responder` `tcpdump` `dsniff` `socat` `aircrack-ng` `pixiewps` `wifite2`
+
+## Entorno de escritorio
+
+- **i3** con gaps y picom (transparencias/blur)
+- **Polybar** tema matrix verde — bluetooth, wifi, volumen, CPU, RAM, disco, updates, power menu
+- **greetd + tuigreet** con ASCII art HaNiX en el login
 - **Rofi** launcher estilo hacker
-- **Nixvim** configuración declarativa de neovim (catppuccin mocha, LSP, treesitter, etc.)
+- **Nixvim** neovim declarativo (catppuccin mocha, LSP, treesitter, cmp...)
 - **Fastfetch** al abrir terminal
-- **Bluetooth** con blueman-applet
+- Bootloader **auto-detectado** (systemd-boot en UEFI, GRUB en BIOS)
 
-## Uso
+## Instalación
 
 ### 1. Clonar
 
 ```bash
-git clone https://github.com/tuusuario/hanixpkg
-cd hanixpkg
+git clone https://github.com/odbk/hanix
+cd hanix
 ```
 
-### 2. Añadir tu hardware
+### 2. Configuración personal
 
-Los ficheros `hosts/` contienen configuración específica de hardware (UUIDs de disco, módulos del kernel). Necesitas generar los tuyos:
+Edita `shared/personal.nix` con tu usuario:
 
-```bash
-sudo nixos-generate-config --show-hardware-config > hosts/mipc.nix
+```nix
+{ ... }: {
+  hanix.mainUser = "tuusuario";
+
+  # Opcional — si clonaste en otro directorio:
+  # hanix.flakePath = "/home/tuusuario/hanix";
+
+  # Opcional — disco para GRUB en sistemas BIOS (por defecto /dev/sda):
+  # hanix.grubDevice = "/dev/sda";
+}
 ```
 
-Añade tu host en `flake.nix` siguiendo el patrón de `pc` o `laptop`, cambiando el hostname.
-
-### 3. Configuración personal
+Activa skip-worktree para que git no suba tus datos:
 
 ```bash
-cp shared/personal.nix shared/personal.nix.bak  # opcional
-# Edita shared/personal.nix con tu usuario y datos
 git update-index --skip-worktree shared/personal.nix
 ```
 
-El fichero `personal.nix` define tu usuario y paquetes personales. Con `skip-worktree` git ignora tus cambios locales y nunca los subirás accidentalmente.
-
-### 4. Aplicar
+### 3. Aplicar
 
 ```bash
-git add .
-sudo nixos-rebuild switch --flake .#mihost
+./rebuild
 ```
+
+El script copia automáticamente tu `hardware-configuration.nix`, detecta si el sistema es UEFI o BIOS y aplica la configuración.
 
 ## Estructura
 
 ```
-flake.nix               # entradas y hosts
-hosts/                  # hardware específico (UUIDs, módulos kernel) — NO compartir
-  pc.nix
-  laptop.nix
-  vm.nix
+flake.nix                  # entradas y configuraciones
+rebuild                    # script de instalación/actualización
+hardware-configuration.nix # generado automáticamente por ./rebuild (gitignored)
 shared/
-  configuration.nix     # base del sistema (audio, locale, bluetooth...)
-  appearance.nix        # entorno gráfico (i3, polybar, greetd, fuentes...)
-  essentials.nix        # paquetes esenciales
-  extras.nix            # chats, fastfetch, utilidades extra
-  hacking.nix           # herramientas de seguridad
-  nixvim.nix            # configuración de neovim
-  personal.nix          # ← TU usuario y config privada (skip-worktree)
-  .config/              # dotfiles (i3, polybar, rofi, picom, fastfetch...)
+  configuration.nix        # base del sistema (audio, locale, bluetooth, bootloader...)
+  appearance.nix           # entorno gráfico (i3, polybar, greetd, fuentes...)
+  essentials.nix           # paquetes esenciales (thunar, docker, gvfs...)
+  extras.nix               # utilidades extra (telegram, discord, vlc...)
+  hacking.nix              # +50 herramientas de seguridad
+  nixvim.nix               # configuración declarativa de neovim
+  default-user.nix         # define el usuario según hanix.mainUser
+  user-option.nix          # opciones hanix.* (mainUser, flakePath, grubDevice)
+  personal.nix             # ← TU config privada (skip-worktree, no se sube)
+  .config/                 # dotfiles (i3, polybar, rofi, picom, fastfetch...)
 ```
 
-## Añadir un nuevo host
+## Opciones personalizables
 
-En `flake.nix`, dentro de `nixosConfigurations`:
-
-```nix
-mipc = mkNixosSystem "mipc" [
-  ./hosts/mipc.nix
-  ./shared/appearance.nix
-  { networking.hostName = "mipc"; }
-];
-```
+| Opción | Por defecto | Descripción |
+|--------|-------------|-------------|
+| `hanix.mainUser` | `"hanix"` | Nombre del usuario principal |
+| `hanix.flakePath` | `/home/<user>/hanixpkg` | Ruta al repo (para el alias `rebuild`) |
+| `hanix.grubDevice` | `"/dev/sda"` | Disco de instalación GRUB (solo sistemas BIOS) |
