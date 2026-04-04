@@ -31,8 +31,8 @@
       ./shared/hacking.nix
       ./shared/essentials.nix
       ./shared/extras.nix
-      ./shared/nixvim.nix
       ./shared/themes/appearance.nix
+      ./shared/themes/nixvim.nix
       ./shared/themes/plymouth.nix
       ./shared/personal.nix      # stub — edita localmente con skip-worktree
     ];
