@@ -32,6 +32,7 @@
       ./shared/essentials.nix
       ./shared/extras.nix
       ./shared/nixvim.nix
+      ./shared/plymouth.nix      # boot splash HaNiX
       ./shared/personal.nix      # stub — edita localmente con skip-worktree
     ];
 

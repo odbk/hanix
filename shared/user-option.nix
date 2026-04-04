@@ -16,4 +16,10 @@
     default     = "/dev/sda";
     description = "Disco donde instalar GRUB en sistemas BIOS (ignorado en UEFI).";
   };
+
+  options.hanix.plymouthGpuModules = lib.mkOption {
+    type        = lib.types.listOf lib.types.str;
+    default     = [];
+    description = "Módulos KMS a cargar en el initrd para Plymouth. Pon el de tu GPU: amdgpu, i915, nouveau, radeon.";
+  };
 }

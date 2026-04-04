@@ -7,7 +7,7 @@
 
   # Bootloader — auto-detecta UEFI o BIOS
   boot.loader.systemd-boot.enable          = builtins.pathExists "/sys/firmware/efi/efivars";
-  boot.loader.systemd-boot.configurationLimit = 3;
+  boot.loader.systemd-boot.configurationLimit = 3;  # overridden to 2 in plymouth.nix when Plymouth is active
   boot.loader.efi.canTouchEfiVariables     = builtins.pathExists "/sys/firmware/efi/efivars";
   boot.loader.grub = lib.mkIf (!builtins.pathExists "/sys/firmware/efi/efivars") {
     enable = true;
@@ -20,12 +20,6 @@
   boot.kernelParams    = [ "quiet" "loglevel=3" "systemd.show_status=false" ];
   boot.consoleLogLevel = 3;
 
-  # Plymouth — splash de boot con tema hacker aleatorio
-  boot.plymouth = {
-    enable = true;
-    themePackages = [ pkgs.adi1090x-plymouth-themes ];
-    theme = "glitch";
-  };
 
   programs.bash.shellAliases = {
     rebuild     = "${config.hanix.flakePath}/rebuild";

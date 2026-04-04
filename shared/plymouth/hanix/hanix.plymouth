@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=HaNiX
+Description=HaNiX hacker boot splash
+ModuleName=script
+
+[script]
+ImageDir=/run/current-system/sw/share/plymouth/themes/hanix
+ScriptFile=/run/current-system/sw/share/plymouth/themes/hanix/hanix.script
