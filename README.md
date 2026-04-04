@@ -12,7 +12,10 @@ NixOS flake orientado a hacking y ciberseguridad — entorno hacker con i3, poly
 `metasploit` `sqlmap` `exploitdb` `msfpc` `netexec` `smbmap` `enum4linux`
 
 ### Escaneo y Reconocimiento
-`nmap` `masscan` `amass` `subfinder` `theharvester` `dnsenum` `whatweb` `nikto` `gobuster` `ffuf` `dirb` `dirbuster` `burpsuite` `caido`
+`nmap` `masscan` `amass` `subfinder` `theharvester` `dnsenum` `whatweb` `nikto` `gobuster` `ffuf` `feroxbuster` `dirb` `dirbuster` `burpsuite` `caido` `nuclei` `sslscan`
+
+### Active Directory y Windows
+`bloodhound` `evil-winrm` `kerbrute`
 
 ### Ingeniería Inversa y Análisis Binario
 `ghidra` `radare2` `cutter` `binwalk` `gdb` `pwndbg` `ltrace` `strace` `checksec`
@@ -20,8 +23,11 @@ NixOS flake orientado a hacking y ciberseguridad — entorno hacker con i3, poly
 ### Criptografía y Fuerza Bruta
 `hashcat` `john` `thc-hydra` `cewl` `crunch` `wfuzz` `seclists` `rockyou` `wordlists`
 
-### Red y MITM
-`wireshark` `ettercap` `mitmproxy` `bettercap` `responder` `tcpdump` `dsniff` `socat` `aircrack-ng` `pixiewps` `wifite2`
+### Red, MITM y Pivoting
+`wireshark` `ettercap` `mitmproxy` `bettercap` `responder` `tcpdump` `dsniff` `socat` `ligolo-ng` `aircrack-ng` `pixiewps` `wifite2`
+
+### Anonimato y Proxies
+`tor` `proxychains`
 
 ## Entorno de escritorio
 

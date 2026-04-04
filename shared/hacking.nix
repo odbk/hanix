@@ -54,6 +54,23 @@
     wordlists
     wfuzz
 
+    # Active Directory y Windows
+    bloodhound
+    evil-winrm
+    kerbrute
+
+    # Tunneling y Pivoting
+    ligolo-ng
+
+    # Escaneo moderno
+    nuclei
+    feroxbuster
+    sslscan
+
+    # Anonimato y Proxies
+    tor
+    proxychains
+
     # Herramientas de Red y MITM
     ettercap
     mitmproxy
