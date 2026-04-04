@@ -9,6 +9,12 @@
 
 ---
 
+## Screenshots
+
+![Login](screenshots/greetd.png)
+![Desktop](screenshots/screen1.png)
+![Shell](screenshots/shell.png)
+
 ## Entorno de escritorio
 
 - **i3** con gaps y picom (transparencias/blur)
