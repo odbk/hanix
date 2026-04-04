@@ -1,10 +1,28 @@
-# HaNiX
+<p align="center">
+  <img src="shared/images/boot.png" width="480" alt="HaNiX">
+</p>
 
-NixOS flake orientado a hacking y ciberseguridad — entorno hacker con i3, polybar, greetd y nixvim, con más de 50 herramientas de seguridad preinstaladas y configuradas.
+<p align="center">
+  NixOS flake orientado a hacking y ciberseguridad — entorno hacker con i3, polybar, greetd y nixvim,<br>
+  con más de 50 herramientas de seguridad preinstaladas y boot splash personalizado.
+</p>
 
-![Login](screenshots/greetd.png)
-![Desktop](screenshots/screen1.png)
-![Shell](screenshots/shell.png)
+---
+
+## Entorno de escritorio
+
+- **i3** con gaps y picom (transparencias/blur)
+- **Polybar** tema matrix verde
+  - Barra superior: workspaces · CPU · RAM · disco (click = popup de uso) · red · volumen · updates · power menu
+  - Barra inferior: IPs activas con click para copiar al portapapeles · system tray
+- **greetd + tuigreet** con ASCII art HaNiX en el login
+- **Plymouth** boot splash con logo HaNiX personalizado + barra de progreso verde
+- **Rofi** launcher y modales estilo hacker
+- **Nixvim** neovim declarativo (catppuccin mocha, LSP, treesitter, cmp...)
+- **Fastfetch** con logo al abrir terminal
+- **dunst** notificaciones de escritorio
+- **flameshot** capturas de pantalla (`Print` = pantalla completa, `mod+p` = área, `mod+Shift+p` = con anotaciones)
+- Bootloader **auto-detectado** (systemd-boot en UEFI, GRUB en BIOS)
 
 ## Herramientas de seguridad incluidas
 
@@ -29,27 +47,15 @@ NixOS flake orientado a hacking y ciberseguridad — entorno hacker con i3, poly
 ### Anonimato y Proxies
 `tor` `proxychains`
 
-## Entorno de escritorio
-
-- **i3** con gaps y picom (transparencias/blur)
-- **Polybar** tema matrix verde — bluetooth, wifi, volumen, CPU, RAM, disco, updates, power menu
-- **greetd + tuigreet** con ASCII art HaNiX en el login
-- **Rofi** launcher estilo hacker
-- **Nixvim** neovim declarativo (catppuccin mocha, LSP, treesitter, cmp...)
-- **Fastfetch** al abrir terminal
-- Bootloader **auto-detectado** (systemd-boot en UEFI, GRUB en BIOS)
-
 ## Instalación
 
 ### 0. Requisitos previos (instalación fresca de NixOS)
-
-Tras instalar NixOS base, habilita flakes y git:
 
 ```bash
 nix-shell -p git
 ```
 
-O de forma permanente añade a `/etc/nixos/configuration.nix`:
+O de forma permanente en `/etc/nixos/configuration.nix`:
 
 ```nix
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -69,11 +75,15 @@ cd hanix
 
 ### 2. Configuración personal
 
-Edita `shared/personal.nix` con tu usuario:
+Edita `shared/personal.nix`:
 
 ```nix
 { ... }: {
   hanix.mainUser = "tuusuario";
+
+  # GPU para Plymouth (sin esto el boot splash no se muestra)
+  # Pon el módulo de tu tarjeta gráfica: amdgpu, i915, nouveau, radeon
+  hanix.plymouthGpuModules = [ "amdgpu" ];
 
   # Opcional — si clonaste en otro directorio:
   # hanix.flakePath = "/home/tuusuario/hanix";
@@ -97,6 +107,8 @@ git update-index --skip-worktree shared/personal.nix
 
 El script copia automáticamente tu `hardware-configuration.nix`, detecta si el sistema es UEFI o BIOS y aplica la configuración.
 
+> Para que el boot splash Plymouth aparezca en el primer arranque usa `./rebuild boot` en lugar de `./rebuild`.
+
 ## Estructura
 
 ```
@@ -106,20 +118,25 @@ hardware-configuration.nix # generado automáticamente por ./rebuild (gitignored
 shared/
   configuration.nix        # base del sistema (audio, locale, bluetooth, bootloader...)
   appearance.nix           # entorno gráfico (i3, polybar, greetd, fuentes...)
-  essentials.nix           # paquetes esenciales (thunar, docker, gvfs...)
+  essentials.nix           # paquetes esenciales (thunar, docker, gvfs, curl, jq...)
   extras.nix               # utilidades extra (telegram, discord, vlc...)
   hacking.nix              # +50 herramientas de seguridad
+  plymouth.nix             # boot splash HaNiX personalizado
   nixvim.nix               # configuración declarativa de neovim
   default-user.nix         # define el usuario según hanix.mainUser
-  user-option.nix          # opciones hanix.* (mainUser, flakePath, grubDevice)
+  user-option.nix          # opciones hanix.* personalizables
   personal.nix             # ← TU config privada (skip-worktree, no se sube)
+  images/
+    boot.png               # logo HaNiX original
+  plymouth/hanix/          # tema Plymouth personalizado
   .config/                 # dotfiles (i3, polybar, rofi, picom, fastfetch...)
 ```
 
-## Opciones personalizables
+## Opciones personalizables (`personal.nix`)
 
 | Opción | Por defecto | Descripción |
 |--------|-------------|-------------|
 | `hanix.mainUser` | `"hanix"` | Nombre del usuario principal |
 | `hanix.flakePath` | `/home/<user>/hanixpkg` | Ruta al repo (para el alias `rebuild`) |
 | `hanix.grubDevice` | `"/dev/sda"` | Disco de instalación GRUB (solo sistemas BIOS) |
+| `hanix.plymouthGpuModules` | `[]` | Módulos KMS para el boot splash (`amdgpu`, `i915`, `nouveau`...) |
