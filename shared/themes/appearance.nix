@@ -85,6 +85,7 @@ in
   services.xserver.displayManager.sessionCommands = ''
     # ── Cursor theme ─────────────────────────────────────────────────────────
     [ -f "$HOME/.Xresources" ] && ${pkgs.xorg.xrdb}/bin/xrdb -merge "$HOME/.Xresources"
+    ${pkgs.xorg.xsetroot}/bin/xsetroot -cursor_name left_ptr
 
     # ── Marcar como primary el monitor más ancho ──────────────────────────
     # Encuentra el monitor conectado con mayor resolución horizontal y lo
