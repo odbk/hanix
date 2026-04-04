@@ -30,4 +30,5 @@ MSG="${MSG}\n${SEP}"
 
 rofi -no-config \
      -theme "$dir/diskinfo.rasi" \
-     -e "$MSG"
+     -dmenu -mesg "$MSG" \
+     -p "" < /dev/null

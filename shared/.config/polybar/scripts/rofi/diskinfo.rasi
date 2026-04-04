@@ -1,6 +1,7 @@
 configuration {
-    font: "JetBrainsMono Nerd Font 10";
+    font:           "JetBrainsMono Nerd Font 10";
     hide-scrollbar: true;
+    lines:          0;
 }
 
 * {
@@ -44,4 +45,5 @@ textbox {
     horizontal-align: 0;
     vertical-align:   0.5;
     font:             "JetBrainsMono Nerd Font 10";
+    markup:           true;
 }
