@@ -3,7 +3,7 @@
 let
   hanixTheme = pkgs.stdenvNoCC.mkDerivation {
     name = "plymouth-theme-hanix";
-    src  = ./plymouth/hanix;
+    src  = ../plymouth/hanix;
 
     dontBuild   = true;
     installPhase = ''

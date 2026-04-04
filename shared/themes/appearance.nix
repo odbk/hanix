@@ -35,7 +35,7 @@ in
   ###########################
 
   # Esqueleto para usuarios nuevos
-  environment.etc."skel/.config".source = ./.config;
+  environment.etc."skel/.config".source = ../.config;
   environment.etc."skel/.Xresources".text = ''
     Xft.dpi: 96
     Xft.antialias: 1

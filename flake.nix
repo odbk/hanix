@@ -32,7 +32,8 @@
       ./shared/essentials.nix
       ./shared/extras.nix
       ./shared/nixvim.nix
-      ./shared/plymouth.nix      # boot splash HaNiX
+      ./shared/themes/appearance.nix
+      ./shared/themes/plymouth.nix
       ./shared/personal.nix      # stub — edita localmente con skip-worktree
     ];
 
@@ -50,21 +51,21 @@
       # nixos-rebuild switch --flake . (sin tag, usa el hostname actual)
       hanixcel = mkNixosSystem [
         ./hardware-configuration.nix
-        ./shared/appearance.nix
+        ./shared/themes/appearance.nix
         { networking.hostName = "hanixcel"; }
       ];
 
       # Alias para instalaciones frescas (hostname por defecto de NixOS)
       nixos = mkNixosSystem [
         ./hardware-configuration.nix
-        ./shared/appearance.nix
+        ./shared/themes/appearance.nix
         { networking.hostName = "hanixcel"; }
       ];
 
       hanix-vm = mkNixosSystem [
         ./hardware-configuration.nix
         ./shared/vmware.nix
-        ./shared/appearance.nix
+        ./shared/themes/appearance.nix
         { networking.hostName = "hanix-vm"; }
       ];
     };
