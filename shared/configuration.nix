@@ -21,8 +21,8 @@
   boot.consoleLogLevel = 3;
 
   programs.bash.shellAliases = {
-    rebuild     = "sudo nixos-rebuild switch --impure --flake ${config.hanix.flakePath}";
-    rebuild-dry = "sudo nixos-rebuild dry-run --impure --flake ${config.hanix.flakePath}";
+    rebuild     = "${config.hanix.flakePath}/rebuild";
+    rebuild-dry = "${config.hanix.flakePath}/rebuild dry-run";
   };
 
   # Fastfetch al abrir terminal interactivo
