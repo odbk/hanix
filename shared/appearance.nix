@@ -60,6 +60,7 @@ in
               chmod +x "${home}/.config/i3/wallpaper.sh"              2>/dev/null || true
               chmod +x "${home}/.config/polybar/scripts/nixupdates.sh" 2>/dev/null || true
               chmod +x "${home}/.config/polybar/scripts/powermenu.sh"  2>/dev/null || true
+              chmod +x "${home}/.config/polybar/scripts/diskinfo.sh"   2>/dev/null || true
             fi
             if [ -f /etc/skel/.Xresources ] && [ -d "${home}" ]; then
               install -o "${u}" -g users /etc/skel/.Xresources "${home}/.Xresources"
@@ -151,9 +152,9 @@ in
     xdg-desktop-portal
     xdg-desktop-portal-gtk
     maim xclip             # captura de pantalla al portapapeles
+    flameshot              # captura interactiva con anotaciones
     feh xwallpaper         # fondo de pantalla
     lxappearance           # cambiar temas GTK fácilmente
-    pulseaudio
     pavucontrol
     xterm
     arandr

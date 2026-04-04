@@ -24,7 +24,6 @@
   programs.bash.shellAliases = {
     rebuild     = "${config.hanix.flakePath}/rebuild";
     rebuild-dry = "${config.hanix.flakePath}/rebuild dry-run";
-    retheme     = "${config.hanix.flakePath}/retheme";
   };
 
   # Fastfetch al abrir terminal interactivo
