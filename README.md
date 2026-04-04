@@ -11,24 +11,26 @@
 
 ## Screenshots
 
-![Login](screenshots/greetd.png)
-![Desktop](screenshots/screen1.png)
-![Shell](screenshots/shell.png)
+> ⚠️ Screenshots pendientes de actualizar
 
 ## Entorno de escritorio
 
 - **i3** con gaps y picom (transparencias/blur)
 - **Polybar** tema matrix verde
   - Barra superior: workspaces · CPU · RAM · disco (click = popup de uso) · red · volumen · updates · power menu
-  - Barra inferior: IPs activas con click para copiar al portapapeles · system tray
-- **greetd + tuigreet** con ASCII art HaNiX en el login
+  - Barra inferior: IPs activas (click = copiar + notificación) · system tray
+- **greetd + tuigreet** login TUI con ASCII art HaNiX
 - **Plymouth** boot splash con logo HaNiX personalizado + barra de progreso verde
+- **GTK** tema catppuccin mocha verde (Thunar, geany, pavucontrol...)
 - **Rofi** launcher y modales estilo hacker
 - **Nixvim** neovim declarativo (catppuccin mocha, LSP, treesitter, cmp...)
 - **Fastfetch** con logo al abrir terminal
-- **dunst** notificaciones de escritorio
-- **flameshot** capturas de pantalla (`Print` = pantalla completa, `mod+p` = área, `mod+Shift+p` = con anotaciones)
-- Bootloader **auto-detectado** (systemd-boot en UEFI, GRUB en BIOS)
+- **tmux** con barra de estado verde matrix (prefix `Ctrl+a`)
+- **dunst** notificaciones — VPN conectada/desconectada automáticamente
+- **udiskie** automontaje de USBs con notificación
+- **flameshot** capturas (`Print` = completa, `mod+p` = área, `mod+Shift+p` = anotaciones)
+- **i3lock-color** pantalla de bloqueo con logo HaNiX (`mod+Escape`)
+- Bootloader **auto-detectado** (systemd-boot UEFI / GRUB BIOS)
 
 ## Herramientas de seguridad incluidas
 
@@ -126,24 +128,26 @@ El script copia automáticamente tu `hardware-configuration.nix`, detecta si el 
 ## Estructura
 
 ```
-flake.nix                  # entradas y configuraciones
-rebuild                    # script de instalación/actualización
-hardware-configuration.nix # generado automáticamente por ./rebuild (gitignored)
+flake.nix                    # entradas y configuraciones
+rebuild                      # script de instalación/actualización
+setup                        # script de configuración inicial (ejecutar antes del primer rebuild)
+hardware-configuration.nix   # generado automáticamente por ./rebuild (gitignored)
 shared/
-  configuration.nix        # base del sistema (audio, locale, bluetooth, bootloader...)
-  appearance.nix           # entorno gráfico (i3, polybar, greetd, fuentes...)
-  essentials.nix           # paquetes esenciales (thunar, docker, gvfs, curl, jq...)
-  extras.nix               # utilidades extra (telegram, discord, vlc...)
-  hacking.nix              # +50 herramientas de seguridad
-  plymouth.nix             # boot splash HaNiX personalizado
-  nixvim.nix               # configuración declarativa de neovim
-  default-user.nix         # define el usuario según hanix.mainUser
-  user-option.nix          # opciones hanix.* personalizables
-  personal.nix             # ← TU config privada (skip-worktree, no se sube)
+  configuration.nix          # base del sistema (audio, locale, bluetooth, bootloader, aliases...)
+  essentials.nix             # servicios y paquetes core (thunar, docker, gvfs, xdg defaults...)
+  extras.nix                 # software adicional (telegram, discord, vlc...)
+  hacking.nix                # +50 herramientas de seguridad
+  default-user.nix           # define el usuario según hanix.mainUser
+  user-option.nix            # opciones hanix.* personalizables
+  personal.nix               # ← TU config privada (skip-worktree, no se sube)
+  themes/
+    appearance.nix           # entorno gráfico (i3, polybar, greetd, GTK, fuentes, dotfiles sync)
+    plymouth.nix             # boot splash HaNiX
+    nixvim.nix               # neovim declarativo
+    plymouth/hanix/          # assets del tema Plymouth (logo, script)
   images/
-    boot.png               # logo HaNiX original
-  plymouth/hanix/          # tema Plymouth personalizado
-  .config/                 # dotfiles (i3, polybar, rofi, picom, fastfetch...)
+    boot.png                 # logo HaNiX original
+  .config/                   # dotfiles (i3, polybar, rofi, dunst, tmux, fastfetch...)
 ```
 
 ## Opciones personalizables (`personal.nix`)
