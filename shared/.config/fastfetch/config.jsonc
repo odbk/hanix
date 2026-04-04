@@ -33,13 +33,11 @@
     { "type": "os",       "key": "  OS     " },
     { "type": "kernel",   "key": "  Kernel " },
     { "type": "uptime",   "key": "  Uptime " },
-    { "type": "packages", "key": "  Pkgs   " },
     { "type": "shell",    "key": "  Shell  " },
     {
       "type": "separator",
       "string": "─────────────────────────"
     },
-    { "type": "wm",       "key": "  WM     " },
     { "type": "terminal", "key": "  Term   " },
     { "type": "display",  "key": "  Res    " },
     {
@@ -49,11 +47,6 @@
     { "type": "cpu",      "key": "  CPU    " },
     { "type": "gpu",      "key": "  GPU    " },
     { "type": "memory",   "key": "  RAM    " },
-    { "type": "disk",     "key": "  Disk   " },
-    {
-      "type": "separator",
-      "string": "─────────────────────────"
-    },
-    { "type": "colors", "symbol": "block", "paddingLeft": 1 }
+    { "type": "disk",     "key": "  Disk   " }
   ]
 }
