@@ -19,6 +19,7 @@ window {
     border-radius:    0px;
     width:            520px;
     location:         center;
+    cursor:           default;
 }
 
 mainbox {
