@@ -9,6 +9,8 @@
   environment.systemPackages = (with pkgs; [
 
     wget
+    curl
+    jq
     tmux
     xfce.thunar
     xfce.thunar-volman           # montaje automático de USBs
