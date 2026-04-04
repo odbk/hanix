@@ -35,6 +35,25 @@ NixOS flake orientado a hacking y ciberseguridad — entorno hacker con i3, poly
 
 ## Instalación
 
+### 0. Requisitos previos (instalación fresca de NixOS)
+
+Tras instalar NixOS base, habilita flakes y git:
+
+```bash
+nix-shell -p git
+```
+
+O de forma permanente añade a `/etc/nixos/configuration.nix`:
+
+```nix
+nix.settings.experimental-features = [ "nix-command" "flakes" ];
+environment.systemPackages = [ pkgs.git ];
+```
+
+```bash
+sudo nixos-rebuild switch
+```
+
 ### 1. Clonar
 
 ```bash
