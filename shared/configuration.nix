@@ -20,9 +20,17 @@
   boot.kernelParams    = [ "quiet" "loglevel=3" "systemd.show_status=false" ];
   boot.consoleLogLevel = 3;
 
+  # Plymouth — splash de boot con tema hacker aleatorio
+  boot.plymouth = {
+    enable = true;
+    themePackages = [ pkgs.adi1090x-plymouth-themes ];
+    theme = "glitch";
+  };
+
   programs.bash.shellAliases = {
     rebuild     = "${config.hanix.flakePath}/rebuild";
     rebuild-dry = "${config.hanix.flakePath}/rebuild dry-run";
+    retheme     = "${config.hanix.flakePath}/retheme";
   };
 
   # Fastfetch al abrir terminal interactivo
