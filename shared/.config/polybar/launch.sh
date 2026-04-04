@@ -23,9 +23,11 @@ PRIMARY=$(xrandr --query | grep ' connected primary' | awk '{print $1}')
 
 for m in $(xrandr --query | grep ' connected' | awk '{print $1}'); do
     if [ "$m" = "$PRIMARY" ]; then
-        MONITOR=$m polybar --reload primary -c "$CFG" &
+        MONITOR=$m polybar --reload primary        -c "$CFG" &
+        MONITOR=$m polybar --reload bottom-primary -c "$CFG" &
     else
-        MONITOR=$m polybar --reload secondary -c "$CFG" &
+        MONITOR=$m polybar --reload secondary        -c "$CFG" &
+        MONITOR=$m polybar --reload bottom-secondary -c "$CFG" &
     fi
 done
 

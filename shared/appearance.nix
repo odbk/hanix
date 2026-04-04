@@ -61,6 +61,8 @@ in
               chmod +x "${home}/.config/polybar/scripts/nixupdates.sh" 2>/dev/null || true
               chmod +x "${home}/.config/polybar/scripts/powermenu.sh"  2>/dev/null || true
               chmod +x "${home}/.config/polybar/scripts/diskinfo.sh"   2>/dev/null || true
+              chmod +x "${home}/.config/polybar/scripts/ip-local.sh"   2>/dev/null || true
+              chmod +x "${home}/.config/polybar/scripts/ip-vpn.sh"     2>/dev/null || true
             fi
             if [ -f /etc/skel/.Xresources ] && [ -d "${home}" ]; then
               install -o "${u}" -g users /etc/skel/.Xresources "${home}/.Xresources"
