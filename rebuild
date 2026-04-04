@@ -14,4 +14,4 @@ fi
 # Nix flakes solo ven ficheros git-tracked — stagear sin commitear
 git -C "$FLAKE" add -f hardware-configuration.nix 2>/dev/null
 
-exec sudo nixos-rebuild "$ACTION" --flake "$FLAKE" "$@"
+exec sudo nixos-rebuild "$ACTION" --impure --flake "$FLAKE" "$@"

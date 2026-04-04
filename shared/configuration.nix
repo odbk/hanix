@@ -1,14 +1,18 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
     ];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
+  # Bootloader — auto-detecta UEFI o BIOS
+  boot.loader.systemd-boot.enable          = builtins.pathExists "/sys/firmware/efi/efivars";
   boot.loader.systemd-boot.configurationLimit = 3;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.canTouchEfiVariables     = builtins.pathExists "/sys/firmware/efi/efivars";
+  boot.loader.grub = lib.mkIf (!builtins.pathExists "/sys/firmware/efi/efivars") {
+    enable = true;
+    device = config.hanix.grubDevice;
+  };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
