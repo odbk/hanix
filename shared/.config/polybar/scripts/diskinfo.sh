@@ -1,34 +1,23 @@
 #!/usr/bin/env bash
-# Popup de uso de disco via rofi
-
 dir="$HOME/.config/polybar/scripts/rofi"
 
-G='#00ff41'   # verde
-D='#1a6b1a'   # verde oscuro
-W='#cdd6f4'   # blanco suave
+G='#00ff41'
+D='#4a4a6a'
 
-row() {
+line() {
     local mp="$1"
-    if ! df -h "$mp" &>/dev/null; then return; fi
+    df -h "$mp" &>/dev/null || return
     read -r _ total used free pct _ < <(df -h "$mp" | tail -1)
-    printf '<span color="%s">  %-8s</span><span color="%s">│</span><span color="%s"> %-8s </span><span color="%s">│</span><span color="%s"> %-8s </span><span color="%s">│</span><span color="%s"> %-8s </span><span color="%s">│</span><span color="%s"> %s</span>\n' \
-        "$W" "$mp" "$D" "$G" "$total" "$D" "$G" "$used" "$D" "$G" "$free" "$D" "$G" "$pct"
+    printf '<span color="%s">%-8s</span>  <span color="%s">%6s</span>  <span color="%s">%6s</span>  <span color="%s">%6s</span>  <span color="%s">%s</span>\n' \
+        "$G" "$mp" "$D" "$total" "$D" "$used" "$G" "$free" "$D" "$pct"
 }
 
-SEP="<span color='${D}'>  ────────┼──────────┼──────────┼──────────┼──────</span>"
-HDR="<span color='${D}'>  <b>MOUNT   </b></span><span color='${D}'>│</span><span color='${D}'> <b>TOTAL   </b> </span><span color='${D}'>│</span><span color='${D}'> <b>USED    </b> </span><span color='${D}'>│</span><span color='${D}'> <b>FREE    </b> </span><span color='${D}'>│</span><span color='${D}'> <b>USE%</b></span>"
-
-TITLE="<span color='${G}'><b>󰋊  DISK USAGE</b></span>"
-BLANK="<span> </span>"
-
-MSG="${TITLE}\n${BLANK}\n${HDR}\n${SEP}"
+MSG="<b><span color='${G}'>󰋊  MOUNT     TOTAL    USED    FREE    USE%</span></b>"$'\n'
+MSG+="<span color='${D}'>────────────────────────────────────────────</span>"$'\n'
 for mp in / /home /boot; do
-    line=$(row "$mp")
-    [ -n "$line" ] && MSG="${MSG}\n${line}"
+    row=$(line "$mp")
+    [ -n "$row" ] && MSG+="${row}"$'\n'
 done
-MSG="${MSG}\n${SEP}"
 
-rofi -no-config \
-     -theme "$dir/diskinfo.rasi" \
-     -dmenu -mesg "$MSG" \
-     -p "" < /dev/null
+cp "$dir/diskinfo.rasi" /tmp/diskinfo-test.rasi
+rofi -no-config -theme /tmp/diskinfo-test.rasi -dmenu -mesg "$MSG" -p "" < /dev/null
