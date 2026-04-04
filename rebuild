@@ -11,7 +11,13 @@ if [ ! -f "$FLAKE/hardware-configuration.nix" ]; then
     cp /etc/nixos/hardware-configuration.nix "$FLAKE/hardware-configuration.nix"
 fi
 
-# Nix flakes solo ven ficheros git-tracked — stagear sin commitear
+# Nix flakes solo ven ficheros git-tracked — stagear temporalmente
 git -C "$FLAKE" add -f hardware-configuration.nix 2>/dev/null
 
-exec sudo nixos-rebuild "$ACTION" --impure --flake "$FLAKE" "$@"
+sudo nixos-rebuild "$ACTION" --impure --flake "$FLAKE" "$@"
+EXIT=$?
+
+# Destagear para que no se cuele en commits
+git -C "$FLAKE" restore --staged hardware-configuration.nix 2>/dev/null
+
+exit $EXIT
