@@ -22,7 +22,7 @@
 
   # ── Plymouth — no aplica en live ──────────────────────────────────────────
   boot.plymouth.enable       = lib.mkForce false;
-  boot.initrd.kernelModules  = lib.mkForce [];
+  boot.initrd.kernelModules  = lib.mkForce [ "loop" "iso9660" "overlay" "squashfs" ];
 
   # ── Usuario live: hanix / hanix ───────────────────────────────────────────
   hanix.mainUser = lib.mkForce "hanix";
