@@ -91,7 +91,8 @@
       inherit system;
       modules = isoModules;
       specialArgs = {
-        inherit pkgs unstablePkgs;
+        pkgs         = unstablePkgs;
+        inherit unstablePkgs;
         inherit inputs;
       };
     }).config.system.build.isoImage;
