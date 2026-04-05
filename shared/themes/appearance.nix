@@ -169,6 +169,7 @@ in
     xdg-desktop-portal-gtk
     maim xclip             # captura de pantalla al portapapeles
     flameshot              # captura interactiva con anotaciones
+    polkit_gnome           # agente polkit gráfico (necesario para gparted sin sudo)
     feh xwallpaper         # fondo de pantalla
     lxappearance           # cambiar temas GTK fácilmente
     bibata-cursors         # cursor theme moderno
