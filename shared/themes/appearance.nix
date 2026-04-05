@@ -15,7 +15,7 @@ let
 
   # Comando de greetd — script para evitar problemas de escaping
   greetCmd = pkgs.writeShellScript "greet-start" ''
-    exec ${pkgs.tuigreet}/bin/tuigreet \
+    exec ${pkgs.tuigreet or pkgs.greetd.tuigreet}/bin/tuigreet \
       --time \
       --remember \
       --remember-session \
