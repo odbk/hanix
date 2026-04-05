@@ -56,6 +56,8 @@
     unzip
     udiskie                        # automontaje USBs con notificación
     libnotify                      # notify-send para scripts
+    dislocker                      # montar particiones BitLocker de Windows
+    brightnessctl                  # control de brillo (teclas Fn portátil)
 
     ### DEVOS
     nasm

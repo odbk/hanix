@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+# HaNiX — Instalador interactivo
+# Ejecutar desde la ISO live: sudo hanix-install
+
+set -euo pipefail
+
+GREEN='\033[1;32m'; RED='\033[1;31m'; YELLOW='\033[1;33m'
+DIM='\033[0;90m'; BOLD='\033[1m'; R='\033[0m'
+
+ok()   { echo -e "${GREEN}[✓]${R} $*"; }
+err()  { echo -e "${RED}[✗]${R} $*" >&2; }
+info() { echo -e "${DIM}[·]${R} $*"; }
+warn() { echo -e "${YELLOW}[!]${R} $*"; }
+
+# ── Header ─────────────────────────────────────────────────────────────────
+clear
+echo -e "${GREEN}"
+cat << 'BANNER'
+  ██╗  ██╗ █████╗ ███╗  ██╗██╗██╗  ██╗
+  ██║  ██║██╔══██╗████╗ ██║██║╚██╗██╔╝
+  ███████║███████║██╔██╗██║██║ ╚███╔╝
+  ██╔══██║██╔══██║██║╚████║██║ ██╔██╗
+  ██║  ██║██║  ██║██║ ╚███║██║██╔╝╚██╗
+  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚══╝╚═╝╚═╝  ╚═╝
+BANNER
+echo -e "${R}  ${DIM}Instalador interactivo${R}\n"
+
+# ── Root check ─────────────────────────────────────────────────────────────
+[ "$(id -u)" -eq 0 ] || { err "Ejecuta como root: sudo hanix-install"; exit 1; }
+
+# ── UEFI / BIOS ────────────────────────────────────────────────────────────
+UEFI=false
+[ -d /sys/firmware/efi/efivars ] && UEFI=true
+$UEFI && info "UEFI detectado" || info "BIOS/Legacy detectado"
+echo ""
+
+# ── Mostrar discos ─────────────────────────────────────────────────────────
+echo -e "${BOLD}Discos disponibles:${R}"
+lsblk -d -o NAME,SIZE,MODEL --noheadings | grep -v loop
+echo ""
+
+# ── Preguntas ──────────────────────────────────────────────────────────────
+read -rp "$(echo -e "${GREEN}[?]${R} Disco destino (ej: sda, nvme0n1): ")" DISK_NAME
+DISK="/dev/$DISK_NAME"
+[ -b "$DISK" ] || { err "Disco $DISK no encontrado"; exit 1; }
+
+read -rp "$(echo -e "${GREEN}[?]${R} Hostname de la máquina: ")" HOSTNAME
+HOSTNAME="${HOSTNAME:-hanix}"
+
+read -rp "$(echo -e "${GREEN}[?]${R} Nombre de usuario: ")" USERNAME
+USERNAME="${USERNAME:-hanix}"
+
+read -rsp "$(echo -e "${GREEN}[?]${R} Contraseña: ")" PASSWORD; echo ""
+read -rsp "$(echo -e "${GREEN}[?]${R} Confirmar contraseña: ")" PASSWORD2; echo ""
+[ "$PASSWORD" = "$PASSWORD2" ] || { err "Las contraseñas no coinciden"; exit 1; }
+
+echo -e "\n${DIM}Módulo GPU para Plymouth (boot splash). Deja vacío si no quieres.${R}"
+echo -e "${DIM}  amdgpu · i915 · nouveau · radeon${R}"
+read -rp "$(echo -e "${GREEN}[?]${R} Módulo GPU: ")" GPU_MODULE
+
+# ── Resumen ────────────────────────────────────────────────────────────────
+echo ""
+echo -e "${BOLD}  Resumen de instalación:${R}"
+echo -e "  Disco:    ${GREEN}$DISK${R}"
+echo -e "  Hostname: ${GREEN}$HOSTNAME${R}"
+echo -e "  Usuario:  ${GREEN}$USERNAME${R}"
+echo -e "  GPU:      ${GREEN}${GPU_MODULE:-ninguno}${R}"
+echo ""
+warn "TODOS LOS DATOS DE $DISK SERÁN BORRADOS PERMANENTEMENTE"
+echo ""
+read -rp "$(echo -e "${GREEN}[?]${R} ¿Continuar? [s/N]: ")" CONFIRM
+[[ "$CONFIRM" =~ ^[sS]$ ]] || { info "Instalación cancelada."; exit 0; }
+echo ""
+
+# ── Particionado ───────────────────────────────────────────────────────────
+info "Particionando $DISK..."
+wipefs -af "$DISK"
+parted "$DISK" --script mklabel gpt
+
+if $UEFI; then
+  parted "$DISK" --script \
+    mkpart ESP fat32 1MiB 513MiB \
+    set 1 esp on \
+    mkpart primary ext4 513MiB 100%
+  if [[ "$DISK_NAME" == nvme* ]]; then
+    BOOT="${DISK}p1"; ROOT="${DISK}p2"
+  else
+    BOOT="${DISK}1";  ROOT="${DISK}2"
+  fi
+  info "Formateando (UEFI)..."
+  mkfs.fat -F32 -n BOOT "$BOOT"
+  mkfs.ext4 -L nixos -q "$ROOT"
+  info "Montando..."
+  mount "$ROOT" /mnt
+  mkdir -p /mnt/boot
+  mount "$BOOT" /mnt/boot
+else
+  parted "$DISK" --script mkpart primary ext4 1MiB 100%
+  if [[ "$DISK_NAME" == nvme* ]]; then ROOT="${DISK}p1"; else ROOT="${DISK}1"; fi
+  info "Formateando (BIOS)..."
+  mkfs.ext4 -L nixos -q "$ROOT"
+  info "Montando..."
+  mount "$ROOT" /mnt
+fi
+ok "Disco preparado"
+
+# ── Hardware config ────────────────────────────────────────────────────────
+info "Detectando hardware..."
+nixos-generate-config --root /mnt
+
+# ── Preparar flake ─────────────────────────────────────────────────────────
+info "Preparando flake de instalación..."
+FLAKE=/tmp/hanixpkg
+rm -rf "$FLAKE"
+cp -r /etc/hanixpkg "$FLAKE"
+chmod -R u+w "$FLAKE"
+
+# Hardware config generado → flake
+cp /mnt/etc/nixos/hardware-configuration.nix "$FLAKE/"
+
+# Hash de contraseña
+HASHED=$(openssl passwd -6 "$PASSWORD")
+
+# Personal.nix con la config del usuario
+GPU_LINE=""
+[ -n "$GPU_MODULE" ] && GPU_LINE="  hanix.plymouthGpuModules = [ \"$GPU_MODULE\" ];"
+
+cat > "$FLAKE/shared/personal.nix" << NIXEOF
+{ ... }: {
+  hanix.mainUser   = "$USERNAME";
+  networking.hostName = "$HOSTNAME";
+  users.users."$USERNAME".hashedPassword = "$HASHED";
+$GPU_LINE
+}
+NIXEOF
+ok "Configuración preparada"
+
+# ── nixos-install ──────────────────────────────────────────────────────────
+info "Instalando NixOS (puede tardar varios minutos)..."
+nixos-install \
+  --root /mnt \
+  --flake "$FLAKE#nixos" \
+  --no-root-passwd
+
+# ── Dejar el flake en el home del usuario ──────────────────────────────────
+info "Copiando flake al home del usuario..."
+USERHOME="/mnt/home/$USERNAME"
+mkdir -p "$USERHOME"
+cp -r "$FLAKE" "$USERHOME/hanixpkg"
+# Limpiar hardware-configuration.nix del flake copiado (es por máquina)
+# y marcar personal.nix como skip-worktree
+nixos-enter --root /mnt -- bash -c "
+  chown -R $USERNAME:users /home/$USERNAME/hanixpkg
+  git -C /home/$USERNAME/hanixpkg update-index --skip-worktree shared/personal.nix 2>/dev/null || true
+"
+
+# ── Fin ────────────────────────────────────────────────────────────────────
+echo ""
+ok "¡HaNiX instalado correctamente!"
+echo ""
+echo -e "  ${GREEN}Apaga el equipo, retira el USB y arranca.${R}"
+echo -e "  ${DIM}Usuario: $USERNAME  ·  Hostname: $HOSTNAME${R}"
+echo ""

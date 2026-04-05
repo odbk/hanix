@@ -4,6 +4,10 @@
 # Hardware config — específica de cada máquina, no se comparte
 hardware-configuration.nix
 
+# Salida de nix build (ISOs, derivaciones...)
+result
+result-*
+
 # Archivos de editor
 .direnv/
 .envrc

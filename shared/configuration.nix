@@ -90,6 +90,19 @@
   };
   services.blueman.enable = true;
 
+  # ── Wordlists — descomprimir rockyou al primer rebuild ────────
+  system.activationScripts.wordlists = {
+    text = ''
+      ROCKYOU_GZ="${pkgs.rockyou}/share/wordlists/rockyou.txt.gz"
+      DEST="/usr/share/wordlists/rockyou.txt"
+      if [ -f "$ROCKYOU_GZ" ] && [ ! -f "$DEST" ]; then
+        mkdir -p /usr/share/wordlists
+        ${pkgs.gzip}/bin/gunzip -c "$ROCKYOU_GZ" > "$DEST"
+        chmod 644 "$DEST"
+      fi
+    '';
+  };
+
   # This value determines the NixOS release from which the default
   system.stateVersion = "24.11"; # Did you read the comment?
 }

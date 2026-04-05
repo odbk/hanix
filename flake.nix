@@ -37,6 +37,21 @@
       ./shared/personal.nix      # stub — edita localmente con skip-worktree
     ];
 
+    # Módulos para la ISO — igual que commonModules pero sin personal.nix
+    isoModules = [
+      inputs.nixvim.nixosModules.nixvim
+      ./shared/user-option.nix
+      ./shared/default-user.nix
+      ./shared/configuration.nix
+      ./shared/hacking.nix
+      ./shared/essentials.nix
+      ./shared/extras.nix
+      ./shared/themes/appearance.nix
+      ./shared/themes/nixvim.nix
+      ./shared/themes/plymouth.nix
+      ./shared/iso.nix           # autologin, usuario hanix/hanix, imagen ISO
+    ];
+
     # Función para crear configuraciones NixOS con argumentos comunes
     mkNixosSystem = extraModules: nixpkgs.lib.nixosSystem {
       inherit system;
@@ -51,23 +66,30 @@
       # nixos-rebuild switch --flake . (sin tag, usa el hostname actual)
       hanixcel = mkNixosSystem [
         ./hardware-configuration.nix
-        ./shared/themes/appearance.nix
         { networking.hostName = "hanixcel"; }
       ];
 
-      # Alias para instalaciones frescas (hostname por defecto de NixOS)
+      # Alias para instalaciones frescas — hostname sobreescrito por personal.nix
       nixos = mkNixosSystem [
         ./hardware-configuration.nix
-        ./shared/themes/appearance.nix
-        { networking.hostName = "hanixcel"; }
+        ({ lib, ... }: { networking.hostName = lib.mkDefault "hanix"; })
       ];
 
       hanix-vm = mkNixosSystem [
         ./hardware-configuration.nix
         ./shared/vmware.nix
-        ./shared/themes/appearance.nix
         { networking.hostName = "hanix-vm"; }
       ];
     };
+
+    # ISO live — nix build .#iso
+    packages.${system}.iso = (nixpkgs.lib.nixosSystem {
+      inherit system;
+      modules = isoModules;
+      specialArgs = {
+        inherit pkgs unstablePkgs;
+        inherit inputs;
+      };
+    }).config.system.build.isoImage;
   };
 }
