@@ -32,6 +32,24 @@
   programs.bash.interactiveShellInit = ''
     fastfetch
 
+    # ── Historial ──────────────────────────────────────────
+    HISTSIZE=50000
+    HISTFILESIZE=100000
+    HISTCONTROL=ignoreboth:erasedups
+    shopt -s histappend
+    PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+
+    # ── fzf — búsqueda fuzzy con tema matrix ───────────────
+    source ${pkgs.fzf}/share/fzf/key-bindings.bash
+    source ${pkgs.fzf}/share/fzf/completion.bash
+    export FZF_DEFAULT_OPTS="
+      --color=fg:#cdd6f4,bg:#1e1e2e,hl:#00ff41
+      --color=fg+:#00ff41,bg+:#313244,hl+:#00ff41
+      --color=info:#f9e2af,prompt:#00ff41,pointer:#00ff41
+      --color=marker:#00ff41,spinner:#00ff41,header:#585b70
+      --border=sharp --prompt='❯ ' --pointer='▶' --marker='✓'
+    "
+
     # ── Hacking utils ──────────────────────────────────────
     http()  { python3 -m http.server "''${1:-8080}"; }
     ports() { nmap -sV --open -T4 "$@"; }

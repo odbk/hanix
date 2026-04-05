@@ -58,6 +58,7 @@
     libnotify                      # notify-send para scripts
     dislocker                      # montar particiones BitLocker de Windows
     brightnessctl                  # control de brillo (teclas Fn portátil)
+    fzf                            # búsqueda fuzzy (Ctrl+R historial, Ctrl+T archivos)
 
     ### DEVOS
     nasm
