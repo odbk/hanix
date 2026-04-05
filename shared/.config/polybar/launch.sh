@@ -23,10 +23,10 @@ CFG="$HOME/.config/polybar/config.ini"
 # Si hay sesión HiDPI activa, generar config escalado 2x al vuelo
 if [ -f /tmp/hanix-hidpi-active ]; then
     CFG="/tmp/polybar-hidpi.ini"
-    sed \
-        -e 's/size=\([0-9]*\)/echo "size=$((\1*2))"/ge' \
-        -e 's/height\s*=\s*\([0-9]*\)/echo "height = $((\1*2))"/ge' \
-        -e 's/tray-size\s*=\s*\([0-9]*\)/echo "tray-size = $((\1*2))"/ge' \
+    sed -E \
+        -e 's/size=([0-9]+)/echo "size=$((\1*2))"/ge' \
+        -e 's/height[[:space:]]*=[[:space:]]*([0-9]+)/echo "height = $((\1*2))"/ge' \
+        -e 's/tray-size[[:space:]]*=[[:space:]]*([0-9]+)/echo "tray-size = $((\1*2))"/ge' \
         "$HOME/.config/polybar/config.ini" > "$CFG"
 fi
 

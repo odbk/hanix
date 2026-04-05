@@ -53,8 +53,14 @@ H=$(echo "$PRIMARY_LINE" | grep -oP '\d+x\d+\+\d+\+\d+' | grep -oP 'x\K\d+')
 
 [ "$W" -ge 2560 ] && [ "$H" -ge 1440 ] || exit 0
 
-# ── Modal ──────────────────────────────────────────────────────────────────
-RASI="$HOME/.config/polybar/scripts/rofi/confirm.rasi"
+# ── Modal — generar confirm.rasi escalado para que se vea en HiDPI ─────────
+RASI_ORIG="$HOME/.config/polybar/scripts/rofi/confirm.rasi"
+RASI="/tmp/hidpi-confirm.rasi"
+sed -E \
+    -e 's/("([^"]*) ([0-9]+)")/echo "\"\2 $((\3*2))\""/ge' \
+    -e 's/([0-9]+)px/echo "$((\1*2))px"/ge' \
+    "$RASI_ORIG" > "$RASI"
+
 CHOICE=$(echo -e "Sí, aplicar escalado HiDPI\nNo, mantener por defecto" | \
     rofi -no-config -theme "$RASI" \
     -dmenu -p "  Pantalla HiDPI detectada (${W}x${H})" -i)
