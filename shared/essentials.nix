@@ -52,7 +52,7 @@
     geany
     blueman
     wireplumber
-    helvum
+    crosspipe
     unzip
     udiskie                        # automontaje USBs con notificación
     libnotify                      # notify-send para scripts

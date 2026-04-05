@@ -33,7 +33,7 @@
 
   # ── Autologin — greetd lanza i3 directamente sin pantalla de login ────────
   services.greetd.settings.initial_session = {
-    command = "${pkgs.xorg.xinit}/bin/startx ${pkgs.i3}/bin/i3 -- :0 vt1";
+    command = "${pkgs.xinit}/bin/startx ${pkgs.i3}/bin/i3 -- :0 vt1";
     user    = "hanix";
   };
 
