@@ -38,7 +38,7 @@
     cutter
     binwalk
     gdb
-    pwndbg
+    #pwndbg  # no disponible en unstable
     ltrace
     strace
     checksec
