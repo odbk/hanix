@@ -41,7 +41,7 @@
   isoImage.isoName          = lib.mkForce "hanix.iso";
   isoImage.makeEfiBootable  = true;
   isoImage.makeUsbBootable  = true;
-  isoImage.squashfsCompression = "zstd -Xcompression-level 6";
+  isoImage.squashfsCompression = lib.mkForce "xz -Xdict-size 100%";
 
   networking.hostName = "hanix";
   networking.wireless.enable = lib.mkForce false;
