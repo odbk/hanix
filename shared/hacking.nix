@@ -82,9 +82,13 @@
     dsniff
     netcat
     socat
+    # WiFi
     aircrack-ng
     pixiewps
     wifite2
+    hcxtools        # captura y conversión de handshakes WPA
+    hcxdumptool     # captura de paquetes WiFi (PMKID, EAPOL)
+    cowpatty        # fuerza bruta WPA PSK offline
   ];
 
 }
