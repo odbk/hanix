@@ -20,7 +20,7 @@ let
       --remember \
       --remember-session \
       --xsessions "${config.services.displayManager.sessionData.desktops}/share/xsessions" \
-      --xsession-wrapper "${pkgs.xinit}/bin/startx /usr/bin/env" \
+      --xsession-wrapper "${pkgs.xinit or pkgs.xorg.xinit}/bin/startx /usr/bin/env" \
       --greeting "$(cat ${hanixArt})" \
       --greet-align left \
       --theme "border=green;text=green;prompt=green;time=green;action=green;button=green;container=black;input=green" \
@@ -177,7 +177,7 @@ in
     (polybar.override { i3Support = true; pulseSupport = true; })
     picom
     xorg.xdpyinfo
-    xinit                  # startx — necesario para greetd + X11
+    (pkgs.xinit or pkgs.xorg.xinit)  # startx — necesario para greetd + X11
     networkmanagerapplet   # nm-applet (bandeja sistema) + nm-connection-editor
   ];
 
