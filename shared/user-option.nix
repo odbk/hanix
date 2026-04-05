@@ -24,7 +24,7 @@
 
   options.hanix.plymouthGpuModules = lib.mkOption {
     type        = lib.types.listOf lib.types.str;
-    default     = [];
-    description = "Módulos KMS a cargar en el initrd para Plymouth. Pon el de tu GPU: amdgpu, i915, nouveau, radeon.";
+    default     = [ "amdgpu" "radeon" "i915" "nouveau" "virtio_gpu" ];
+    description = "Módulos KMS a cargar en el initrd para Plymouth. Por defecto incluye los más comunes.";
   };
 }
