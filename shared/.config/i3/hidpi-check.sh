@@ -50,5 +50,8 @@ export XCURSOR_SIZE=48
 # Aplicar cursor inmediatamente
 xsetroot -cursor_name left_ptr
 
+# Marcar sesión HiDPI para que launch.sh escale polybar
+touch /tmp/hanix-hidpi-active
+
 # Reiniciar i3 — exec_always relanzará polybar con el entorno actualizado
 i3-msg restart
