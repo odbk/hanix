@@ -63,7 +63,11 @@
     };
   in {
     nixosConfigurations = {
-      # nixos-rebuild switch --flake . (sin tag, usa el hostname actual)
+      hanix = mkNixosSystem [
+        ./hardware-configuration.nix
+        { networking.hostName = "hanix"; }
+      ];
+
       hanixcel = mkNixosSystem [
         ./hardware-configuration.nix
         { networking.hostName = "hanixcel"; }
