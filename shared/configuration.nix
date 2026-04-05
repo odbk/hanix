@@ -42,11 +42,10 @@
       hex         = "xxd";
     };
 
+    promptInit = "PROMPT='%F{#00ff41}%n@%m%f%F{#1a6b1a}:%~%f %F{#00ff41}>%f '";
+
     interactiveShellInit = ''
       fastfetch
-
-      # ── Prompt — user@host verde, directorio dim ─────────
-      PROMPT='%F{#00ff41}%n@%m%f%F{#1a6b1a}:%~%f %F{#00ff41}>%f '
 
       # ── Historial ────────────────────────────────────────
       HISTFILE="$HOME/.zsh_history"
