@@ -50,6 +50,15 @@ export XCURSOR_SIZE=48
 # Aplicar cursor inmediatamente
 xsetroot -cursor_name left_ptr
 
+# Escalar ficheros .rasi de rofi en sitio (sesión efímera en ISO)
+RASI_DIR="$HOME/.config/polybar/scripts/rofi"
+for f in "$RASI_DIR"/*.rasi; do
+    # Doblar tamaños de fuente:  "Font Name 18"  →  "Font Name 36"
+    sed -i -E 's/("([^"]*) ([0-9]+)")/echo "\"\2 $((\3*2))\""/ge' "$f"
+    # Doblar valores en px:  350px  →  700px
+    sed -i -E 's/([0-9]+)px/echo "$((\1*2))px"/ge' "$f"
+done
+
 # Marcar sesión HiDPI para que launch.sh escale polybar
 touch /tmp/hanix-hidpi-active
 
