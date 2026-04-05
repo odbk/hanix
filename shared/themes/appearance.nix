@@ -15,12 +15,12 @@ let
 
   # Comando de greetd — script para evitar problemas de escaping
   greetCmd = pkgs.writeShellScript "greet-start" ''
-    exec ${pkgs.greetd.tuigreet}/bin/tuigreet \
+    exec ${pkgs.tuigreet}/bin/tuigreet \
       --time \
       --remember \
       --remember-session \
       --xsessions "${config.services.displayManager.sessionData.desktops}/share/xsessions" \
-      --xsession-wrapper "${pkgs.xorg.xinit}/bin/startx /usr/bin/env" \
+      --xsession-wrapper "${pkgs.xinit}/bin/startx /usr/bin/env" \
       --greeting "$(cat ${hanixArt})" \
       --greet-align left \
       --theme "border=green;text=green;prompt=green;time=green;action=green;button=green;container=black;input=green" \
@@ -177,7 +177,7 @@ in
     (polybar.override { i3Support = true; pulseSupport = true; })
     picom
     xorg.xdpyinfo
-    xorg.xinit             # startx — necesario para greetd + X11
+    xinit                  # startx — necesario para greetd + X11
     networkmanagerapplet   # nm-applet (bandeja sistema) + nm-connection-editor
   ];
 
@@ -193,7 +193,8 @@ in
     packages = with pkgs; [
       dejavu_fonts
       material-design-icons
-      (nerdfonts.override { fonts = [ "JetBrainsMono" "Iosevka" ]; })
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.iosevka
     ];
 
     fontconfig = {

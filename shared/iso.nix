@@ -38,7 +38,7 @@
   };
 
   # ── Imagen ISO ────────────────────────────────────────────────────────────
-  isoImage.isoName          = lib.mkForce "hanix.iso";
+  image.fileName            = lib.mkForce "hanix.iso";
   isoImage.makeEfiBootable  = true;
   isoImage.makeUsbBootable  = true;
   isoImage.squashfsCompression = lib.mkForce "xz -Xdict-size 100%";
