@@ -6,7 +6,7 @@
   ];
 
   # ── Flake embebido en la ISO para instalación offline ─────────────────────
-  environment.etc."hanixpkg".source = ../..; # raíz del repo → /etc/hanixpkg
+  environment.etc."hanix".source = ../..; # raíz del repo → /etc/hanix
 
   # ── Comando hanix-install disponible en el live ───────────────────────────
   environment.systemPackages = [

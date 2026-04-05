@@ -110,9 +110,9 @@ nixos-generate-config --root /mnt
 
 # ── Preparar flake ─────────────────────────────────────────────────────────
 info "Preparando flake de instalación..."
-FLAKE=/tmp/hanixpkg
+FLAKE=/tmp/hanix
 rm -rf "$FLAKE"
-cp -r /etc/hanixpkg "$FLAKE"
+cp -r /etc/hanix "$FLAKE"
 chmod -R u+w "$FLAKE"
 
 # Hardware config generado → flake
@@ -146,12 +146,12 @@ nixos-install \
 info "Copiando flake al home del usuario..."
 USERHOME="/mnt/home/$USERNAME"
 mkdir -p "$USERHOME"
-cp -r "$FLAKE" "$USERHOME/hanixpkg"
+cp -r "$FLAKE" "$USERHOME/hanix"
 # Limpiar hardware-configuration.nix del flake copiado (es por máquina)
 # y marcar personal.nix como skip-worktree
 nixos-enter --root /mnt -- bash -c "
-  chown -R $USERNAME:users /home/$USERNAME/hanixpkg
-  git -C /home/$USERNAME/hanixpkg update-index --skip-worktree shared/personal.nix 2>/dev/null || true
+  chown -R $USERNAME:users /home/$USERNAME/hanix
+  git -C /home/$USERNAME/hanix update-index --skip-worktree shared/personal.nix 2>/dev/null || true
 "
 
 # ── Fin ────────────────────────────────────────────────────────────────────

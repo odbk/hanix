@@ -2,7 +2,7 @@
 # Comprueba si hay actualizaciones en los inputs del flake.
 # Usa caché de 1 hora para no abusar de la API de GitHub.
 
-FLAKE_DIR="${FLAKE_DIR:-$HOME/hanixpkg}"
+FLAKE_DIR="${FLAKE_DIR:-$HOME/hanix}"
 LOCK="$FLAKE_DIR/flake.lock"
 CACHE_DIR="/tmp/hanix-updates"
 mkdir -p "$CACHE_DIR"
