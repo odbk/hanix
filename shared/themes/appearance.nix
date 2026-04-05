@@ -220,7 +220,6 @@ in
   # ── greetd + tuigreet — login TUI hacker con ASCII art ─────
   services.greetd = {
     enable = true;
-    vt = 1;   # TTY1 — evita que logs de boot ensucien la pantalla
     settings.default_session = {
       command = "${greetCmd}";
       user    = "greeter";
