@@ -12,7 +12,7 @@ if [ ! -f "$FLAKE/hardware-configuration.nix" ]; then
 fi
 
 # path: lee el filesystem directamente, sin filtro git — incluye hardware-configuration.nix gitignoreado
-sudo nixos-rebuild "$ACTION" --flake "path:$FLAKE" "$@"
+sudo nixos-rebuild "$ACTION" --impure --flake "path:$FLAKE" "$@"
 EXIT=$?
 
 exit $EXIT
