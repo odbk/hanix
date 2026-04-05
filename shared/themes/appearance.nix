@@ -57,16 +57,8 @@ in
           let home = config.users.users.${u}.home; in ''
             if [ -d /etc/skel/.config ] && [ -d "${home}" ]; then
               ${pkgs.rsync}/bin/rsync -a --no-perms --chmod=Du+rwx,Fu+rw --chown="${u}:users" /etc/skel/.config/ "${home}/.config/"
-              chmod +x "${home}/.config/polybar/bluetooth.sh"          2>/dev/null || true
-              chmod +x "${home}/.config/polybar/launch.sh"            2>/dev/null || true
-              chmod +x "${home}/.config/i3/wallpaper.sh"              2>/dev/null || true
-              chmod +x "${home}/.config/polybar/scripts/nixupdates.sh" 2>/dev/null || true
-              chmod +x "${home}/.config/polybar/scripts/powermenu.sh"  2>/dev/null || true
-              chmod +x "${home}/.config/polybar/scripts/diskinfo.sh"   2>/dev/null || true
-              chmod +x "${home}/.config/polybar/scripts/ip-local.sh"    2>/dev/null || true
-              chmod +x "${home}/.config/polybar/scripts/ip-vpn.sh"      2>/dev/null || true
-              chmod +x "${home}/.config/polybar/scripts/lockscreen.sh"  2>/dev/null || true
-              chmod +x "${home}/.config/polybar/scripts/cheatsheet.sh"  2>/dev/null || true
+              find "${home}/.config" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
+              find "${home}/.config" -name "checkupdates" -exec chmod +x {} \; 2>/dev/null || true
             fi
             if [ -f /etc/skel/.Xresources ] && [ -d "${home}" ]; then
               install -o "${u}" -g users /etc/skel/.Xresources "${home}/.Xresources"
