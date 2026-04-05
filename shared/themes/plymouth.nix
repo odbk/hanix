@@ -27,6 +27,4 @@ in
   # KMS: carga los módulos GPU configurados en hanix.plymouthGpuModules
   boot.initrd.kernelModules = config.hanix.plymouthGpuModules;
 
-  # Reducir generaciones para no llenar /boot
-  boot.loader.systemd-boot.configurationLimit = lib.mkForce 2;
 }

@@ -5,14 +5,10 @@
     [ # Include the results of the hardware scan.
     ];
 
-  # Bootloader — auto-detecta UEFI o BIOS
-  boot.loader.systemd-boot.enable          = builtins.pathExists "/sys/firmware/efi/efivars";
-  boot.loader.systemd-boot.configurationLimit = 3;  # overridden to 2 in plymouth.nix when Plymouth is active
-  boot.loader.efi.canTouchEfiVariables     = builtins.pathExists "/sys/firmware/efi/efivars";
-  boot.loader.grub = lib.mkIf (!builtins.pathExists "/sys/firmware/efi/efivars") {
-    enable = true;
-    device = config.hanix.grubDevice;
-  };
+  # Bootloader — UEFI con systemd-boot
+  boot.loader.systemd-boot.enable             = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.loader.efi.canTouchEfiVariables        = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
