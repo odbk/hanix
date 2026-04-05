@@ -87,7 +87,7 @@
     };
 
     # ISO live — nix build .#iso
-    packages.${system}.iso = (nixpkgs.lib.nixosSystem {
+    packages.${system}.iso = (unstable.lib.nixosSystem {
       inherit system;
       modules = isoModules;
       specialArgs = {
