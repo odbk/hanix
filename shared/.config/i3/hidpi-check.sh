@@ -30,11 +30,13 @@ CHOICE=$(echo -e "Sí, aplicar escalado HiDPI\nNo, mantener por defecto" | \
 
 # Aplicar escalado 2x
 xrdb -merge - <<EOF
-Xft.dpi:       192
-Xft.antialias: 1
-Xft.hinting:   1
-Xft.rgba:      rgb
-Xft.lcdfilter: lcddefault
+Xft.dpi:        192
+Xft.antialias:  1
+Xft.hinting:    1
+Xft.rgba:       rgb
+Xft.lcdfilter:  lcddefault
+Xcursor.size:   48
+Xcursor.theme:  Bibata-Modern-Classic
 EOF
 
 dbus-update-activation-environment --systemd \
@@ -43,5 +45,10 @@ dbus-update-activation-environment --systemd \
     QT_SCALE_FACTOR=2     \
     XCURSOR_SIZE=48
 
-# Reiniciar i3 para que las apps nuevas hereden el entorno
+export XCURSOR_SIZE=48
+
+# Aplicar cursor inmediatamente
+xsetroot -cursor_name left_ptr
+
+# Reiniciar i3 — exec_always relanzará polybar con el entorno actualizado
 i3-msg restart

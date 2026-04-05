@@ -56,7 +56,7 @@ in
         (u:
           let home = config.users.users.${u}.home; in ''
             if [ -d /etc/skel/.config ] && [ -d "${home}" ]; then
-              ${pkgs.rsync}/bin/rsync -a --no-perms --chmod=Du+rwx,Fu+rw --chown="${u}:users" /etc/skel/.config/ "${home}/.config/"
+              ${pkgs.rsync}/bin/rsync -a --ignore-existing --no-perms --chmod=Du+rwx,Fu+rw --chown="${u}:users" /etc/skel/.config/ "${home}/.config/"
               find "${home}/.config" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
               find "${home}/.config" -name "checkupdates" -exec chmod +x {} \; 2>/dev/null || true
             fi
