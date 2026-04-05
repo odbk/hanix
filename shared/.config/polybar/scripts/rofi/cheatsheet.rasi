@@ -1,0 +1,53 @@
+configuration {
+    font:           "JetBrainsMono Nerd Font 10";
+    hide-scrollbar: true;
+}
+
+* {
+    bg:  #1e1e2eFF;
+    ac:  #00ff4133;
+    fg:  #00ff41FF;
+    dim: #1a6b1aFF;
+    al:  #00000000;
+}
+
+window {
+    background-color: @bg;
+    text-color:       @fg;
+    border:           0px 0px 2px 0px;
+    border-color:     @dim;
+    border-radius:    0px;
+    width:            700px;
+    location:         center;
+    cursor:           default;
+}
+
+mainbox {
+    background-color: @al;
+    border:           0px;
+    children:         [ message, listview ];
+    padding:          0px;
+    spacing:          0px;
+}
+
+message {
+    background-color: @al;
+    text-color:       @fg;
+    padding:          18px 28px 18px 28px;
+}
+
+textbox {
+    background-color: @al;
+    text-color:       @fg;
+    expand:           true;
+    horizontal-align: 0;
+    vertical-align:   0.5;
+    markup:           true;
+    line-height:      1.5;
+}
+
+listview {
+    lines:            0;
+    background-color: @al;
+    padding:          0px;
+}
