@@ -2,7 +2,7 @@
   description = "Configuración compartida";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -10,7 +10,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, unstable, ... } @ inputs: 
+  outputs = { self, nixpkgs, unstable, ... } @ inputs:
   let
     system = "x86_64-linux";
 
@@ -18,6 +18,7 @@
     mkPkgs = pkgsInput: import pkgsInput {
       inherit system;
       config.allowUnfree = true;
+      config.permittedInsecurePackages = [ "mbedtls-2.28.10" ];
     };
 
     pkgs = mkPkgs nixpkgs;
@@ -57,8 +58,8 @@
       inherit system;
       modules = commonModules ++ extraModules;
       specialArgs = {
-        inherit pkgs unstablePkgs;
-        inherit inputs;
+        inherit pkgs unstablePkgs inputs;
+        isIso = false;
       };
     };
   in {
@@ -87,13 +88,13 @@
     };
 
     # ISO live — nix build .#iso
-    packages.${system}.iso = (unstable.lib.nixosSystem {
+    packages.${system}.iso = (nixpkgs.lib.nixosSystem {
       inherit system;
       modules = isoModules;
       specialArgs = {
-        pkgs         = unstablePkgs;
-        inherit unstablePkgs;
-        inherit inputs;
+        inherit pkgs unstablePkgs inputs;
+        flakeRoot    = ./.;  # raíz del flake evaluada aquí, no en iso.nix
+        isIso        = true;
       };
     }).config.system.build.isoImage;
   };

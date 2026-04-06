@@ -1,7 +1,6 @@
 { pkgs, unstablePkgs, ... }:
 
 {
-  virtualisation.docker.enable = true;
 
   services.gvfs.enable    = true;
   services.udisks2.enable = true;
@@ -35,8 +34,8 @@
     curl
     jq
     tmux
-    xfce.thunar
-    xfce.thunar-volman           # montaje automático de USBs
+    (pkgs.thunar or pkgs.xfce.thunar)
+    (pkgs.thunar-volman or pkgs.xfce.thunar-volman)  # montaje automático de USBs
     gvfs
     samba                        # backend SMB para gvfs/Thunar
     alacritty
@@ -52,7 +51,7 @@
     geany
     blueman
     wireplumber
-    crosspipe
+    (if pkgs ? crosspipe then pkgs.crosspipe else pkgs.helvum)
     unzip
     udiskie                        # automontaje USBs con notificación
     libnotify                      # notify-send para scripts

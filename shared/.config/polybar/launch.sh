@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-# Evitar ejecuciones simultáneas en restart de i3
-LOCKFILE="/tmp/polybar-launch.lock"
-exec 9>"$LOCKFILE"
-flock -n 9 || exit 0
+rm -f /tmp/polybar-launch.lock
 
-killall -q polybar
-while pgrep -u "$UID" -x polybar > /dev/null; do sleep 0.1; done
+kill $(pgrep polybar) 2>/dev/null || true
+sleep 0.5
+while pgrep polybar > /dev/null; do sleep 0.1; done
 
 # Establecer el monitor más ancho como primary si no hay ninguno marcado
 if ! xrandr --query | grep -q ' connected primary'; then
@@ -25,11 +23,11 @@ PRIMARY=$(xrandr --query | grep ' connected primary' | awk '{print $1}')
 
 for m in $(xrandr --query | grep ' connected' | awk '{print $1}'); do
     if [ "$m" = "$PRIMARY" ]; then
-        MONITOR=$m polybar --reload primary        -c "$CFG" &
-        MONITOR=$m polybar --reload bottom-primary -c "$CFG" &
+        MONITOR=$m polybar primary        -c "$CFG" &
+        MONITOR=$m polybar bottom-primary -c "$CFG" &
     else
-        MONITOR=$m polybar --reload secondary        -c "$CFG" &
-        MONITOR=$m polybar --reload bottom-secondary -c "$CFG" &
+        MONITOR=$m polybar secondary        -c "$CFG" &
+        MONITOR=$m polybar bottom-secondary -c "$CFG" &
     fi
 done
 

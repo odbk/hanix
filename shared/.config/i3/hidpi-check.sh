@@ -24,14 +24,48 @@ EOF
 scale_rasi() {
     [ -f /tmp/hanix-hidpi-rasi-scaled ] && return
     touch /tmp/hanix-hidpi-rasi-scaled
-    RASI_DIR="$HOME/.config/polybar/scripts/rofi"
+    for RASI_DIR in "$HOME/.config/polybar/scripts/rofi" "$HOME/.config/rofi"; do
+        [ -d "$RASI_DIR" ] || continue
     for f in "$RASI_DIR"/*.rasi; do
-        # Fuentes: "Font Name 10" → "Font Name 18"  (×1.75 redondeado)
-        sed -i -E 's/("([^"]*) ([0-9]+)")/printf "%s" "\""; printf "%s" "\2 "; echo $(( (\3 * 175 + 50) / 100 )); printf "%s" "\""/ge' "$f" 2>/dev/null || \
-        sed -i -E 's/("([^"]*) ([0-9]+)")/echo "\"\2 $(( (\3 * 175 + 50) \/ 100 ))\""/ge' "$f"
-        # Valores px: 350px → 612px
-        sed -i -E 's/([0-9]+)px/echo "$(( (\1 * 175 + 50) \/ 100 ))px"/ge' "$f"
+        fname=$(basename "$f")
+        [[ "$fname" == confirm.rasi || "$fname" == confirm-hidpi.rasi ]] && continue
+        # Escalar valores px y tamaños de fuente ("Font Name 10" → "Font Name 18")
+        awk '
+        {
+            # Escalar NNpx — construir salida sin reprocesar
+            result = ""; rest = $0
+            while (match(rest, /[0-9]+px/)) {
+                result = result substr(rest, 1, RSTART-1) int(substr(rest, RSTART, RLENGTH-2)*1.75) "px"
+                rest = substr(rest, RSTART+RLENGTH)
+            }
+            line = result rest
+            # Escalar tamaño de fuente: "Font Name 10" → "Font Name 18"
+            if (match(line, /"[^"]*[[:space:]][0-9]+"/, arr)) {
+                quoted = substr(line, RSTART, RLENGTH)
+                n = split(substr(quoted, 2, length(quoted)-2), parts, " ")
+                size = parts[n] + 0
+                if (size > 0) {
+                    parts[n] = int(size * 1.75)
+                    new = parts[1]
+                    for (i=2; i<=n; i++) new = new " " parts[i]
+                    sub(/"[^"]*[[:space:]][0-9]+"/, "\"" new "\"", line)
+                }
+            }
+            print line
+        }
+        ' "$f" > "${f}.tmp" && mv "${f}.tmp" "$f"
     done
+    done
+}
+
+restart_dunst() {
+    DUNSTRC="$HOME/.config/dunst/dunstrc"
+    [ -f "$DUNSTRC" ] || return
+    kill $(pgrep dunst) 2>/dev/null || true
+    sleep 0.3
+    # Lanzar dunst con fuente escalada (10 → 18)
+    sed 's/\(font.*\b\)\([0-9]\+\)\s*$/\115/' "$DUNSTRC" > /tmp/dunstrc-hidpi
+    dunst -conf /tmp/dunstrc-hidpi &
 }
 
 # ── Si ya se aceptó HiDPI en este boot, reaplicar silenciosamente ──────────
@@ -41,7 +75,10 @@ if [ -f /tmp/hanix-hidpi-active ]; then
     exit 0
 fi
 
-# ── Primera vez — comprobar si ya se preguntó ──────────────────────────────
+# ── "No mostrar más" — marcador persistente entre reinicios ───────────────
+[ -f "$HOME/.config/hanix-hidpi-dismissed" ] && exit 0
+
+# ── Primera vez por sesión — comprobar si ya se preguntó ──────────────────
 [ -f /tmp/hanix-hidpi-checked ] && exit 0
 touch /tmp/hanix-hidpi-checked
 
@@ -56,24 +93,42 @@ H=$(echo "$PRIMARY_LINE" | grep -oP '\d+x\d+\+\d+\+\d+' | grep -oP 'x\K\d+')
 
 [ "$W" -ge 2560 ] && [ "$H" -ge 1440 ] || exit 0
 
-# ── Modal — generar confirm.rasi escalado para que se vea en HiDPI ─────────
-RASI_ORIG="$HOME/.config/polybar/scripts/rofi/confirm.rasi"
-RASI="/tmp/hidpi-confirm.rasi"
-sed -E \
-    -e 's/("([^"]*) ([0-9]+)")/echo "\"\2 $(( (\3 * 175 + 50) \/ 100 ))\""/ge' \
-    -e 's/([0-9]+)px/echo "$(( (\1 * 175 + 50) \/ 100 ))px"/ge' \
-    "$RASI_ORIG" > "$RASI"
+# ── Detectar DPI del monitor para elegir tamaño del modal ─────────────────
+WIDTH_MM=$(echo "$PRIMARY_LINE" | grep -oP '\d+mm' | head -1 | grep -oP '\d+')
+if [ -n "$WIDTH_MM" ] && [ "$WIDTH_MM" -gt 0 ]; then
+    MODAL_DPI=$(( W * 254 / (WIDTH_MM * 10) ))
+else
+    MODAL_DPI=96
+fi
 
-CHOICE=$(echo -e "Sí, aplicar escalado HiDPI\nNo, mantener por defecto" | \
-    rofi -no-config -theme "$RASI" \
-    -dmenu -p "  Pantalla HiDPI detectada (${W}x${H})" -i)
+# Usar rasi pre-escalado si el monitor es HiDPI
+RASI_DIR="$HOME/.config/polybar/scripts/rofi"
+if [ "$MODAL_DPI" -ge 144 ] && [ -f "$RASI_DIR/confirm-hidpi.rasi" ]; then
+    RASI="$RASI_DIR/confirm-hidpi.rasi"
+else
+    RASI="$RASI_DIR/confirm.rasi"
+fi
 
-[[ "$CHOICE" != "Sí"* ]] && exit 0
+# ── Modal ─────────────────────────────────────────────────────────────────
+CHOICE=$(printf "  Sí.\n  No.\n  No recordar más." | rofi -no-config -theme "$RASI" \
+    -dmenu -p "󰹑  HiDPI (${W}×${H}) detectado — ¿Ampliar escalado a 1.75×?" \
+    -i)
+
+if [[ "$CHOICE" == *"No recordar"* ]]; then
+    touch "$HOME/.config/hanix-hidpi-dismissed"
+    exit 0
+fi
+
+[[ "$CHOICE" != *"Sí"* ]] && exit 0
 
 # ── Aplicar ────────────────────────────────────────────────────────────────
 apply_hidpi
 scale_rasi
+restart_dunst
 touch /tmp/hanix-hidpi-active
 
-# Reiniciar i3 — exec_always relanzará polybar con config-hidpi.ini
-i3-msg restart
+# Relanzar polybar con config-hidpi.ini
+kill $(pgrep polybar) 2>/dev/null || true
+sleep 0.5
+while pgrep polybar > /dev/null; do sleep 0.1; done
+exec bash ~/.config/polybar/launch.sh

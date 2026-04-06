@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Construye la ISO logueando timestamps por derivación.
+# Uso: ./build-iso [argumentos extra para nix build]
+
+FLAKE="$(dirname "$(readlink -f "$0")")"
+LOG="/tmp/hanix-iso-build-$(date +%Y%m%d-%H%M%S).log"
+
+echo "=== HaNiX ISO build — $(date) ===" | tee "$LOG"
+echo "Log: $LOG"
+echo ""
+
+# nix build con salida verbose — cada línea "building '...'" tiene timestamp
+nix build "$FLAKE#iso" --impure \
+    --log-format internal-json -v "$@" 2>&1 \
+    | while IFS= read -r line; do
+        echo "[$(date +%H:%M:%S)] $line" | tee -a "$LOG"
+    done
+
+EXIT=${PIPESTATUS[0]}
+
+echo ""
+echo "=== Fin — $(date) — exit $EXIT ===" | tee -a "$LOG"
+
+if [ $EXIT -eq 0 ]; then
+    ls -lh "$FLAKE/result/iso/" 2>/dev/null
+fi
+
+exit $EXIT

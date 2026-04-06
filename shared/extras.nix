@@ -12,11 +12,11 @@
     fastfetch
     vlc
     eog                          # visor de imágenes
-    xfce.tumbler                 # miniaturas en Thunar (imágenes, vídeos, PDFs)
-    evince                       # visor de PDF
-    btop                         # monitor del sistema
-    gparted                      # gestor de discos gráfico
-    xfce.thunar-archive-plugin   # integración de comprimidos en Thunar
+    (pkgs.tumbler or pkgs.xfce.tumbler)                             # miniaturas en Thunar
+    evince                                                          # visor de PDF
+    btop                                                            # monitor del sistema
+    gparted                                                         # gestor de discos gráfico
+    (pkgs.thunar-archive-plugin or pkgs.xfce.thunar-archive-plugin) # comprimidos en Thunar
     xarchiver                    # backend para abrir/crear zips, tars, etc.
 
   ];

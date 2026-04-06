@@ -1,4 +1,4 @@
-{ config, pkgs, lib, modulesPath, ... }:
+{ config, pkgs, lib, modulesPath, flakeRoot, ... }:
 
 {
   imports = [
@@ -6,11 +6,11 @@
   ];
 
   # ── Flake embebido en la ISO para instalación offline ─────────────────────
-  environment.etc."hanix".source = ../..; # raíz del repo → /etc/hanix
+  environment.etc."hanix".source = flakeRoot; # raíz del repo → /etc/hanix
 
   # ── Comando hanix-install disponible en el live ───────────────────────────
   environment.systemPackages = [
-    (pkgs.writeShellScriptBin "hanix-install" (builtins.readFile ../install))
+    (pkgs.writeShellScriptBin "hanix-install" (builtins.readFile "${flakeRoot}/install"))
   ];
 
   # ── Bootloader — anular config del sistema base ───────────────────────────
@@ -33,16 +33,18 @@
 
   # ── Autologin — greetd lanza i3 directamente sin pantalla de login ────────
   services.greetd.settings.initial_session = {
-    command = "${pkgs.xinit}/bin/startx ${pkgs.i3}/bin/i3 -- :0 vt1";
+    command = "${(pkgs.xinit or pkgs.xorg.xinit)}/bin/startx ${pkgs.i3}/bin/i3 -- :0 vt1";
     user    = "hanix";
   };
 
   # ── Imagen ISO ────────────────────────────────────────────────────────────
-  image.fileName            = lib.mkForce "hanix.iso";
+  image.baseName            = lib.mkForce "hanix";
   isoImage.makeEfiBootable  = true;
   isoImage.makeUsbBootable  = true;
-  isoImage.squashfsCompression = lib.mkForce "xz -Xdict-size 100%";
+  # Para release final usar: "xz -Xdict-size 100%"
+  isoImage.squashfsCompression = lib.mkForce "zstd -Xcompression-level 1";
 
   networking.hostName = "hanix";
+  system.nixos.distroName = lib.mkForce "HaNiX";
   networking.wireless.enable = lib.mkForce false;
 }

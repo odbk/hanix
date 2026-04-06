@@ -1,0 +1,84 @@
+/* HiDPI Confirm Dialog — 1.75× pre-scaled, colores incrustados */
+
+* {
+    al:               #00000000;
+    bg:               #1F1F1FFF;
+    bga:              #546e7a33;
+    fg:               #FFFFFFFF;
+    ac:               #546e7aFF;
+    background-color: #1F1F1FFF;
+    text-color:       #FFFFFFFF;
+    font:             "Iosevka Nerd Font 18";
+}
+
+window {
+    width:         980px;
+    border:        0px 0px 4px 0px;
+    border-color:  @ac;
+    border-radius: 0px;
+    location:      center;
+}
+
+mainbox {
+    children:         [ inputbar, listview ];
+    background-color: @al;
+    spacing:          0px;
+    padding:          0px;
+    border:           0px;
+}
+
+inputbar {
+    children:         [ prompt ];
+    background-color: @ac;
+    padding:          25px 28px;
+    border:           0px;
+}
+
+prompt {
+    background-color: @al;
+    text-color:       @fg;
+    padding:          0px;
+}
+
+entry {
+    background-color: @ac;
+    text-color:       @ac;
+    placeholder:      "";
+    expand:           false;
+    width:            0px;
+    padding:          0px;
+    margin:           0px;
+}
+
+listview {
+    lines:            3;
+    columns:          1;
+    padding:          11px 0px;
+    spacing:          0px;
+    background-color: @al;
+    border:           0px;
+    fixed-height:     true;
+}
+
+element {
+    padding:          18px 32px;
+    background-color: @al;
+    text-color:       @fg;
+    border-radius:    0px;
+    border:           0px;
+}
+
+element selected {
+    background-color: @bga;
+    text-color:       @fg;
+    border:           0px 0px 0px 5px;
+    border-color:     @ac;
+}
+
+element-text {
+    background-color: @al;
+    text-color:       inherit;
+    expand:           true;
+    horizontal-align: 0;
+    vertical-align:   0.5;
+}

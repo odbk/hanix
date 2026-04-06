@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, isIso ? false, ... }:
 
 let
   # ASCII art para el login — generado como fichero en el store
@@ -56,7 +56,7 @@ in
         (u:
           let home = config.users.users.${u}.home; in ''
             if [ -d /etc/skel/.config ] && [ -d "${home}" ]; then
-              ${pkgs.rsync}/bin/rsync -a --ignore-existing --no-perms --chmod=Du+rwx,Fu+rw --chown="${u}:users" /etc/skel/.config/ "${home}/.config/"
+              ${pkgs.rsync}/bin/rsync -a --update --no-perms --chmod=Du+rwx,Fu+rw --chown="${u}:users" /etc/skel/.config/ "${home}/.config/"
               find "${home}/.config" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
               find "${home}/.config" -name "checkupdates" -exec chmod +x {} \; 2>/dev/null || true
             fi
@@ -67,6 +67,11 @@ in
             mkdir -p "${home}/.icons/default"
             echo -e '[Icon Theme]\nInherits=Bibata-Modern-Classic' \
               > "${home}/.icons/default/index.theme"
+            # Symlink wordlists al home del usuario
+            if [ -d /run/current-system/sw/share/wordlists ] && [ -d "${home}" ]; then
+              ln -sfn /run/current-system/sw/share/wordlists "${home}/wordlists"
+              chown -h "${u}:users" "${home}/wordlists" 2>/dev/null || true
+            fi
           '')
         (lib.attrNames normalUsers);
     deps = [ "etc" ];
@@ -164,7 +169,6 @@ in
     polkit_gnome           # agente polkit gráfico (necesario para gparted sin sudo)
     feh xwallpaper         # fondo de pantalla
     lxappearance           # cambiar temas GTK fácilmente
-    bibata-cursors         # cursor theme moderno
     papirus-icon-theme     # iconos dark coherentes
     (catppuccin-gtk.override {
       accents = [ "green" ];
@@ -176,9 +180,10 @@ in
     arandr
     (polybar.override { i3Support = true; pulseSupport = true; })
     picom
-    xorg.xdpyinfo
+    (pkgs.xdpyinfo or pkgs.xorg.xdpyinfo)
     (pkgs.xinit or pkgs.xorg.xinit)  # startx — necesario para greetd + X11
     networkmanagerapplet   # nm-applet (bandeja sistema) + nm-connection-editor
+    pkgs.bibata-cursors
   ];
 
   xdg.portal.enable = true;
@@ -193,9 +198,12 @@ in
     packages = with pkgs; [
       dejavu_fonts
       material-design-icons
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.iosevka
-    ];
+    ] ++ (if pkgs ? nerd-fonts then [
+      pkgs.nerd-fonts.jetbrains-mono
+      pkgs.nerd-fonts.iosevka
+    ] else [
+      (nerdfonts.override { fonts = [ "JetBrainsMono" "Iosevka" ]; })
+    ]);
 
     fontconfig = {
       enable = true;

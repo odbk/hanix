@@ -110,10 +110,14 @@
   # Configure console keymap
   console.keyMap = "es";
 
+  services.xserver.xkb = {
+    layout  = "es";
+    variant = "nodeadkeys";
+  };
+
   # Usuario definido en personal.nix (skip-worktree, no se sube a git)
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
   hardware.enableAllFirmware = true;
 
   # ── Bluetooth ──────────────────────────────────────────────

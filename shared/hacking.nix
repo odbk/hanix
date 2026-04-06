@@ -20,7 +20,7 @@
     amass
     nmap
     masscan
-    #caido
+    caido
     burpsuite
     dirb
     dirbuster
