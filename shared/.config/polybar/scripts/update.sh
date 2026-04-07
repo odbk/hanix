@@ -19,5 +19,5 @@ else
     read -r -p "Pulsa Enter para cerrar." _
 fi
 
-# Refrescar polybar para que nixupdates muestre 0 inmediatamente
-polybar-msg cmd restart 2>/dev/null || true
+# Refrescar módulo nixupdates sin reiniciar polybar
+polybar-msg action "#nixupdates.hook.0" 2>/dev/null || true
