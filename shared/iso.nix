@@ -42,7 +42,7 @@
   isoImage.makeEfiBootable  = true;
   isoImage.makeUsbBootable  = true;
   # Para release final usar: "xz -Xdict-size 100%"
-  isoImage.squashfsCompression = lib.mkForce "zstd -Xcompression-level 1";
+  isoImage.squashfsCompression = lib.mkForce "zstd -Xcompression-level 19";
 
   networking.hostName = "hanix";
   system.nixos.distroName = lib.mkForce "HaNiX";

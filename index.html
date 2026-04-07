@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HaNiX — Hacking LiveOS</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+    :root {
+      --green:   #00ff41;
+      --green2:  #00cc33;
+      --green3:  #1a6b1a;
+      --bg:      #0d0d0d;
+      --bg2:     #111111;
+      --bg3:     #161616;
+      --border:  #1f3b1f;
+      --dim:     #4a4a4a;
+      --white:   #cdd6f4;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Scanlines overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      color: var(--green);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--dim); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 32px;
+    }
+
+    nav a {
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--green); }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 24px 60px;
+      position: relative;
+      text-align: center;
+    }
+
+    .matrix-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      opacity: 0.04;
+      pointer-events: none;
+      font-size: 13px;
+      color: var(--green);
+      line-height: 1.4;
+      white-space: pre;
+      word-break: break-all;
+    }
+
+    .ascii {
+      color: var(--green);
+      font-size: clamp(7px, 1.2vw, 13px);
+      line-height: 1.2;
+      letter-spacing: 0.05em;
+      white-space: pre;
+      margin-bottom: 40px;
+      text-shadow: 0 0 18px rgba(0,255,65,0.4);
+    }
+
+    .hero-tag {
+      color: var(--dim);
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 700;
+      color: var(--green);
+      text-shadow: 0 0 30px rgba(0,255,65,0.3);
+      margin-bottom: 12px;
+      letter-spacing: 3px;
+    }
+
+    .hero-sub {
+      font-size: clamp(13px, 1.5vw, 16px);
+      color: var(--dim);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.8;
+    }
+
+    .hero-sub em {
+      color: var(--white);
+      font-style: normal;
+    }
+
+    /* Terminal typing */
+    .terminal-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto 48px;
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+
+    .terminal-title {
+      margin-left: auto;
+      color: var(--dim);
+      font-size: 11px;
+    }
+
+    .terminal-body {
+      padding: 18px 20px;
+      font-size: 13px;
+      min-height: 130px;
+    }
+
+    .t-line { margin-bottom: 4px; }
+    .t-prompt { color: var(--green2); }
+    .t-cmd    { color: var(--white); }
+    .t-out    { color: var(--dim); }
+    .t-hi     { color: var(--green); }
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--green);
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #000;
+    }
+    .btn-primary:hover {
+      background: #00e639;
+      box-shadow: 0 0 20px rgba(0,255,65,0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--green);
+      border: 1px solid var(--green3);
+    }
+    .btn-secondary:hover {
+      border-color: var(--green);
+      box-shadow: 0 0 12px rgba(0,255,65,0.15);
+      transform: translateY(-1px);
+    }
+
+    /* ── Sections ── */
+    section {
+      padding: 80px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      color: var(--green3);
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: clamp(20px, 3vw, 30px);
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 40px;
+    }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ── Features grid ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 22px 24px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--green3);
+      box-shadow: 0 0 16px rgba(0,255,65,0.05);
+    }
+
+    .feature-icon {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .feature-name {
+      color: var(--green);
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+
+    .feature-desc {
+      color: var(--dim);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    /* ── Tools list ── */
+    .tools-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 32px;
+    }
+
+    .tool-group h3 {
+      color: var(--green2);
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tool-group ul {
+      list-style: none;
+    }
+
+    .tool-group li {
+      color: var(--dim);
+      font-size: 12px;
+      padding: 3px 0;
+    }
+
+    .tool-group li::before {
+      content: '› ';
+      color: var(--green3);
+    }
+
+    .tool-group li span {
+      color: var(--white);
+    }
+
+    /* ── Install steps ── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 700px;
+    }
+
+    .step {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--green3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .step-content h4 {
+      color: var(--white);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .step-content p {
+      color: var(--dim);
+      font-size: 12px;
+    }
+
+    .code {
+      display: inline-block;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 2px 8px;
+      color: var(--green);
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--dim);
+      font-size: 12px;
+    }
+
+    footer a {
+      color: var(--green3);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--green); }
+
+    .footer-logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      nav ul { display: none; }
+      nav { padding: 12px 20px; }
+      .ascii { font-size: 5px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a class="nav-logo" href="#"><span>//</span> HaNiX</a>
+  <ul>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#screenshots">Screenshots</a></li>
+    <li><a href="https://github.com/odbk/hanix" target="_blank">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="matrix-bg" id="matrixBg"></div>
+
+  <img src="shared/.config/fastfetch/logo.png" alt="HaNiX Logo" style="width:340px;height:auto;margin-bottom:16px;filter:drop-shadow(0 0 32px rgba(0,255,65,0.5));" />
+
+  <p class="hero-tag">NixOS · Hacking · LiveOS</p>
+  <h1 class="hero-title">Hack. Build. Own.</h1>
+  <p class="hero-sub">
+    LiveOS basado en <em>NixOS</em> orientado a seguridad ofensiva.<br>
+    Reproducible, declarativo, escalable a <em>HiDPI</em>.<br>
+    Arranca desde USB. Sin instalación.
+  </p>
+
+  <div class="terminal-box">
+    <div class="terminal-bar">
+      <span class="dot dot-r"></span>
+      <span class="dot dot-y"></span>
+      <span class="dot dot-g"></span>
+      <span class="terminal-title">hanix@live ~ $</span>
+    </div>
+    <div class="terminal-body" id="termBody">
+      <div class="t-line"><span class="t-prompt">hanix@live</span><span class="t-cmd"> ~ $</span> <span id="typedText"></span><span class="cursor" id="cursor"></span></div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <a class="btn btn-primary" href="result/iso/hanix.iso" download>
+      ⬇ Descargar ISO
+    </a>
+    <a class="btn btn-secondary" href="https://github.com/odbk/hanix" target="_blank">
+      ⌥ Ver en GitHub
+    </a>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- Features -->
+<section id="features">
+  <p class="section-label">// por qué HaNiX</p>
+  <h2 class="section-title">Diseñado para el campo</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚙</div>
+      <div class="feature-name">DECLARATIVO</div>
+      <div class="feature-desc">Basado en NixOS. Todo el sistema definido en código — reproducible en cualquier máquina, siempre.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-name">LIVE USB</div>
+      <div class="feature-desc">Arranca desde USB sin tocar el disco. i3wm, polybar y entorno completo listo en segundos.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🖥</div>
+      <div class="feature-name">HIDPI NATIVO</div>
+      <div class="feature-desc">Detección automática de pantallas HiDPI. Escala polybar, rofi, dunst y fuentes en caliente.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <div class="feature-name">OFENSIVA COMPLETA</div>
+      <div class="feature-desc">Metasploit, Burp Suite, Ghidra, Bloodhound, Caido y más de 40 herramientas preinstaladas.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📦</div>
+      <div class="feature-name">WORDLISTS INCLUIDAS</div>
+      <div class="feature-desc">SecLists, rockyou y wfuzz disponibles en <code>~/wordlists</code> desde el primer arranque.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✦</div>
+      <div class="feature-name">ESTÉTICA HACKER</div>
+      <div class="feature-desc">Tema matrix, fuentes Nerd Font, polybar personalizada. Sin compromisos entre función y forma.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- Tools -->
+<section id="tools">
+  <p class="section-label">// arsenal</p>
+  <h2 class="section-title">Herramientas incluidas</h2>
+  <div class="tools-columns">
+    <div class="tool-group">
+      <h3>Explotación</h3>
+      <ul>
+        <li><span>Metasploit</span></li>
+        <li><span>SQLmap</span></li>
+        <li><span>ExploitDB</span></li>
+        <li><span>Netexec</span></li>
+        <li><span>Evil-WinRM</span></li>
+        <li><span>Impacket</span></li>
+      </ul>
+    </div>
+    <div class="tool-group">
+      <h3>Web &amp; Fuzzing</h3>
+      <ul>
+        <li><span>Burp Suite</span></li>
+        <li><span>Caido</span></li>
+        <li><span>ffuf</span></li>
+        <li><span>Gobuster</span></li>
+        <li><span>feroxbuster</span></li>
+        <li><span>Nikto / WhatWeb</span></li>
+      </ul>
+    </div>
+    <div class="tool-group">
+      <h3>Reconocimiento</h3>
+      <ul>
+        <li><span>Nmap / Masscan</span></li>
+        <li><span>Amass / Subfinder</span></li>
+        <li><span>TheHarvester</span></li>
+        <li><span>DNSenum</span></li>
+        <li><span>Nuclei</span></li>
+        <li><span>sslscan</span></li>
+      </ul>
+    </div>
+    <div class="tool-group">
+      <h3>Ingeniería Inversa</h3>
+      <ul>
+        <li><span>Ghidra</span></li>
+        <li><span>Radare2 / Cutter</span></li>
+        <li><span>GDB + checksec</span></li>
+        <li><span>Binwalk</span></li>
+        <li><span>ltrace / strace</span></li>
+      </ul>
+    </div>
+    <div class="tool-group">
+      <h3>Red &amp; MITM</h3>
+      <ul>
+        <li><span>Wireshark</span></li>
+        <li><span>mitmproxy</span></li>
+        <li><span>Bettercap</span></li>
+        <li><span>Responder</span></li>
+        <li><span>Ligolo-ng</span></li>
+        <li><span>Ettercap</span></li>
+      </ul>
+    </div>
+    <div class="tool-group">
+      <h3>Active Directory</h3>
+      <ul>
+        <li><span>Bloodhound</span></li>
+        <li><span>Kerbrute</span></li>
+        <li><span>CrackMapExec</span></li>
+        <li><span>SMBmap</span></li>
+        <li><span>enum4linux</span></li>
+      </ul>
+    </div>
+    <div class="tool-group">
+      <h3>Contraseñas</h3>
+      <ul>
+        <li><span>Hashcat</span></li>
+        <li><span>John the Ripper</span></li>
+        <li><span>Hydra</span></li>
+        <li><span>CeWL / Crunch</span></li>
+        <li><span>SecLists + rockyou</span></li>
+      </ul>
+    </div>
+    <div class="tool-group">
+      <h3>WiFi</h3>
+      <ul>
+        <li><span>Aircrack-ng</span></li>
+        <li><span>Wifite2</span></li>
+        <li><span>hcxdumptool</span></li>
+        <li><span>hcxtools</span></li>
+        <li><span>Pixiewps</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- Install -->
+<section id="install">
+  <p class="section-label">// arranque</p>
+  <h2 class="section-title">En marcha en 3 pasos</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Descarga la ISO</h4>
+        <p>Descarga <code>hanix.iso</code> desde el botón de arriba o clona el repo y compila con Nix.</p>
+        <div class="code">nix build github:odbk/hanix#iso</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Graba en USB</h4>
+        <p>Usa <code>dd</code> o cualquier grabador de imágenes. Compatible con UEFI y BIOS.</p>
+        <div class="code">sudo dd if=hanix.iso of=/dev/sdX bs=4M status=progress</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Arranca y hackea</h4>
+        <p>Arranca desde USB. Login automático con usuario <code>hanix</code> / contraseña <code>hanix</code>. i3 lanza directamente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- Screenshots -->
+<section id="screenshots">
+  <p class="section-label">// aspecto</p>
+  <h2 class="section-title">Capturas de pantalla</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">
+    <div class="feature-card" style="padding:0;overflow:hidden;">
+      <img src="screenshots/screen1.png" alt="Desktop" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
+      <div style="padding:10px 14px;color:var(--dim);font-size:11px;">Escritorio — i3wm + polybar</div>
+    </div>
+    <div class="feature-card" style="padding:0;overflow:hidden;">
+      <img src="screenshots/shell.png" alt="Terminal" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
+      <div style="padding:10px 14px;color:var(--dim);font-size:11px;">Terminal — fastfetch + herramientas</div>
+    </div>
+    <div class="feature-card" style="padding:0;overflow:hidden;">
+      <img src="screenshots/greetd.png" alt="Login" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
+      <div style="padding:10px 14px;color:var(--dim);font-size:11px;">Login — tuigreet personalizado</div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">HaNiX</div>
+  <p>NixOS · i3wm · Hacking LiveOS</p>
+  <br>
+  <p>
+    <a href="https://github.com/odbk/hanix" target="_blank">github.com/odbk/hanix</a>
+    &nbsp;·&nbsp;
+    <a href="https://nixos.org" target="_blank">NixOS 25.11</a>
+  </p>
+  <br>
+  <p style="color:#2a2a2a">Para uso en entornos autorizados. El autor no se hace responsable del uso indebido.</p>
+</footer>
+
+<script>
+  // ── Matrix background ──
+  const bg = document.getElementById('matrixBg');
+  const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEF';
+  let txt = '';
+  for (let i = 0; i < 3000; i++) txt += chars[Math.floor(Math.random() * chars.length)];
+  bg.textContent = txt;
+
+  // ── Terminal typing effect ──
+  const lines = [
+    { cmd: 'uname -a', out: 'Linux hanix 6.12 NixOS 25.11 x86_64' },
+    { cmd: 'ls ~/wordlists/seclists/Discovery/Web-Content/', out: 'big.txt  common.txt  raft-large-words.txt  ...' },
+    { cmd: 'nmap -sV --open -T4 10.10.10.1', out: 'PORT   STATE SERVICE  VERSION\n80/tcp open  http     Apache 2.4.51' },
+    { cmd: 'msfconsole -q -x "use exploit/multi/handler"', out: '[*] Using configured payload generic/shell_reverse_tcp' },
+  ];
+
+  let li = 0, ci = 0;
+  const el = document.getElementById('typedText');
+  const termBody = document.getElementById('termBody');
+
+  function typeLine() {
+    if (li >= lines.length) li = 0;
+    const { cmd, out } = lines[li];
+
+    if (ci < cmd.length) {
+      el.textContent += cmd[ci++];
+      setTimeout(typeLine, 55 + Math.random() * 40);
+    } else {
+      // Show output, move to next line
+      setTimeout(() => {
+        const outDiv = document.createElement('div');
+        outDiv.className = 't-line';
+        outDiv.innerHTML = `<span class="t-out">${out.replace(/\n/g,'<br>')}</span>`;
+        el.parentElement.after(outDiv);
+
+        const newLine = document.createElement('div');
+        newLine.className = 't-line';
+        newLine.innerHTML = `<span class="t-prompt">hanix@live</span><span class="t-cmd"> ~ $</span> <span id="typedText"></span><span class="cursor"></span>`;
+        outDiv.after(newLine);
+
+        // keep only last 6 lines
+        const allLines = termBody.querySelectorAll('.t-line');
+        if (allLines.length > 6) allLines[0].remove();
+
+        li++; ci = 0;
+        setTimeout(typeLine, 800);
+      }, 300);
+    }
+  }
+
+  setTimeout(typeLine, 1200);
+</script>
+
+</body>
+</html>
