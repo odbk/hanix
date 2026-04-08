@@ -657,15 +657,15 @@
   <h2 class="section-title">Capturas de pantalla</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">
     <div class="feature-card" style="padding:0;overflow:hidden;">
-      <img src="screenshots/screen1.png" alt="Desktop" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
+      <img src="screenshots/screen1.png" alt="Desktop" onclick="openLightbox(this.src)" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;cursor:zoom-in;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
       <div style="padding:10px 14px;color:var(--dim);font-size:11px;">Escritorio — i3wm + polybar</div>
     </div>
     <div class="feature-card" style="padding:0;overflow:hidden;">
-      <img src="screenshots/shell.png" alt="Terminal" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
+      <img src="screenshots/shell.png" alt="Terminal" onclick="openLightbox(this.src)" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;cursor:zoom-in;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
       <div style="padding:10px 14px;color:var(--dim);font-size:11px;">Terminal — fastfetch + herramientas</div>
     </div>
     <div class="feature-card" style="padding:0;overflow:hidden;">
-      <img src="screenshots/greetd.png" alt="Login" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
+      <img src="screenshots/greetd.png" alt="Login" onclick="openLightbox(this.src)" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;cursor:zoom-in;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
       <div style="padding:10px 14px;color:var(--dim);font-size:11px;">Login — tuigreet personalizado</div>
     </div>
   </div>
@@ -685,7 +685,22 @@
   <p style="color:#2a2a2a">Para uso en entornos autorizados. El autor no se hace responsable del uso indebido.</p>
 </footer>
 
+<!-- Lightbox -->
+<div id="lightbox" onclick="closeLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;cursor:zoom-out;align-items:center;justify-content:center;">
+  <img id="lightbox-img" style="max-width:92vw;max-height:92vh;border:1px solid #1f3b1f;box-shadow:0 0 40px rgba(0,255,65,0.15);border-radius:4px;" />
+</div>
+
 <script>
+  function openLightbox(src) {
+    const lb = document.getElementById('lightbox');
+    document.getElementById('lightbox-img').src = src;
+    lb.style.display = 'flex';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
   // ── Matrix background ──
   const bg = document.getElementById('matrixBg');
   const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEF';
