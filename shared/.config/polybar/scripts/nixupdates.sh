@@ -50,4 +50,6 @@ done
 
 if [ "$UPDATES" -gt 0 ]; then
     echo "%{F#ffcc00}󰚰 $UPDATES%{F-} %{F#1a6b1a}⟫%{F-}"
+else
+    echo "%{F#2a2a2a}󰚰%{F-}"
 fi

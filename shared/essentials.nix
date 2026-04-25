@@ -2,8 +2,9 @@
 
 {
 
-  services.gvfs.enable    = true;
-  services.udisks2.enable = true;
+  services.gvfs.enable         = true;
+  services.udisks2.enable      = true;
+  services.spice-vdagentd.enable = true;
   environment.pathsToLink = [ "/share/dbus-1" "/share/gvfs" ];
 
   # Aplicaciones por defecto
@@ -33,6 +34,7 @@
     wget
     curl
     jq
+    dig
     tmux
     (pkgs.thunar or pkgs.xfce.thunar)
     (pkgs.thunar-volman or pkgs.xfce.thunar-volman)  # montaje automático de USBs

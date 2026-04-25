@@ -11,6 +11,7 @@
   # ── Comando hanix-install disponible en el live ───────────────────────────
   environment.systemPackages = [
     (pkgs.writeShellScriptBin "hanix-install" (builtins.readFile "${flakeRoot}/install"))
+    pkgs.openssl
   ];
 
   # ── Bootloader — anular config del sistema base ───────────────────────────

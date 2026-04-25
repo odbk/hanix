@@ -4,10 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "unstable";
-    };
   };
 
   outputs = { self, nixpkgs, unstable, ... } @ inputs:
@@ -21,44 +17,47 @@
       config.permittedInsecurePackages = [ "mbedtls-2.28.10" ];
     };
 
-    pkgs = mkPkgs nixpkgs;
     unstablePkgs = mkPkgs unstable;
 
     commonModules = [
-      inputs.nixvim.nixosModules.nixvim
       ./shared/user-option.nix   # define la opción hanix.mainUser
       ./shared/default-user.nix  # crea el usuario según mainUser
       ./shared/configuration.nix
+      ./shared/behaviour.nix
       ./shared/hacking.nix
       ./shared/essentials.nix
       ./shared/extras.nix
       ./shared/themes/appearance.nix
-      ./shared/themes/nixvim.nix
       ./shared/themes/plymouth.nix
       ./shared/personal.nix      # stub — edita localmente con skip-worktree
     ];
 
     # Módulos para la ISO — igual que commonModules pero sin personal.nix
     isoModules = [
-      inputs.nixvim.nixosModules.nixvim
       ./shared/user-option.nix
       ./shared/default-user.nix
       ./shared/configuration.nix
+      ./shared/behaviour.nix
       ./shared/hacking.nix
       ./shared/essentials.nix
       ./shared/extras.nix
       ./shared/themes/appearance.nix
-      ./shared/themes/nixvim.nix
       ./shared/themes/plymouth.nix
       ./shared/iso.nix           # autologin, usuario hanix/hanix, imagen ISO
     ];
 
+    # Módulo con config de nixpkgs (allowUnfree, etc.)
+    nixpkgsModule = {
+      nixpkgs.config.allowUnfree = true;
+      nixpkgs.config.permittedInsecurePackages = [ "mbedtls-2.28.10" ];
+    };
+
     # Función para crear configuraciones NixOS con argumentos comunes
     mkNixosSystem = extraModules: nixpkgs.lib.nixosSystem {
       inherit system;
-      modules = commonModules ++ extraModules;
+      modules = commonModules ++ extraModules ++ [ nixpkgsModule ];
       specialArgs = {
-        inherit pkgs unstablePkgs inputs;
+        inherit unstablePkgs inputs;
         isIso = false;
       };
     };
@@ -90,9 +89,9 @@
     # ISO live — nix build .#iso
     packages.${system}.iso = (nixpkgs.lib.nixosSystem {
       inherit system;
-      modules = isoModules;
+      modules = isoModules ++ [ nixpkgsModule ];
       specialArgs = {
-        inherit pkgs unstablePkgs inputs;
+        inherit unstablePkgs inputs;
         flakeRoot    = ./.;  # raíz del flake evaluada aquí, no en iso.nix
         isIso        = true;
       };

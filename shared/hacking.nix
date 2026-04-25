@@ -27,6 +27,7 @@
     ffuf
     gobuster
     nikto
+    wpscan
     whatweb
     theharvester
     dnsenum

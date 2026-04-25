@@ -47,6 +47,24 @@ in
   '';
 
   # Sincroniza dotfiles al home del usuario principal en cada nixos-rebuild switch
+  system.activationScripts.nixpkgsConfig = {
+    text =
+      let
+        normalUsers = lib.filterAttrs (_: u: u.isNormalUser) config.users.users;
+      in
+      lib.concatMapStrings
+        (u:
+          let home = config.users.users.${u}.home; in ''
+            mkdir -p "${home}/.config/nixpkgs"
+            if [ ! -f "${home}/.config/nixpkgs/config.nix" ]; then
+              echo '{ allowUnfree = true; }' > "${home}/.config/nixpkgs/config.nix"
+              chown "${u}:users" "${home}/.config/nixpkgs/config.nix"
+            fi
+          '')
+        (lib.attrNames normalUsers);
+    deps = [ "etc" ];
+  };
+
   system.activationScripts.userDotfiles = {
     text =
       let
@@ -120,6 +138,9 @@ in
     Xft.rgba: rgb
     Xft.lcdfilter: lcddefault
     XEOF
+
+    # ── Filtro de luz azul ───────────────────────────────────────────────
+    ${pkgs.redshift}/bin/redshift-gtk -l 40.4:-3.7 &
 
     # ── Wallpaper por monitor ─────────────────────────────────────────────
     # Primary (ultrawide): --maximize → imagen completa sin recortar

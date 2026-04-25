@@ -11,8 +11,15 @@ if [ ! -f "$FLAKE/hardware-configuration.nix" ]; then
     cp /etc/nixos/hardware-configuration.nix "$FLAKE/hardware-configuration.nix"
 fi
 
-# path: lee el filesystem directamente, sin filtro git — incluye hardware-configuration.nix gitignoreado
-sudo nixos-rebuild "$ACTION" --impure --flake "path:$FLAKE" "$@"
+# Usa el hostname si existe en el flake, si no cae a #nixos
+HOST=$(hostname)
+if nix eval --impure "path:$FLAKE#nixosConfigurations.$HOST" &>/dev/null 2>&1; then
+  TARGET="path:$FLAKE#$HOST"
+else
+  TARGET="path:$FLAKE#nixos"
+fi
+
+sudo nixos-rebuild "$ACTION" --impure --flake "$TARGET" "$@"
 EXIT=$?
 
 exit $EXIT

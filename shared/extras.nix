@@ -3,10 +3,19 @@
 {
   environment.systemPackages = with pkgs; [
 
+    # ── Audio ─────────────────────────────────────────────
+    qpwgraph                        # gestor visual de enrutado PipeWire
+
     # ── Chats / Comunicaciones ────────────────────────────
     telegram-desktop
     discord
     ferdium
+
+    # ── Escritorio remoto ─────────────────────────────────
+    rustdesk
+
+    # ── Pantalla ──────────────────────────────────────────
+    redshift                        # filtro de luz azul con applet de bandeja
 
     # ── Utilidades de escritorio ──────────────────────────
     fastfetch

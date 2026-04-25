@@ -34,6 +34,13 @@ UEFI=false
 $UEFI && info "UEFI detectado" || info "BIOS/Legacy detectado"
 echo ""
 
+# ── Aviso de red ───────────────────────────────────────────────────────────
+echo -e "${YELLOW}╔══════════════════════════════════════════════════════════╗${R}"
+echo -e "${YELLOW}║  ${BOLD}⚠  REQUIERE CONEXIÓN A INTERNET DURANTE LA INSTALACIÓN${R}  ${YELLOW}║${R}"
+echo -e "${YELLOW}║  Asegúrate de tener ethernet activo antes de continuar.  ║${R}"
+echo -e "${YELLOW}╚══════════════════════════════════════════════════════════╝${R}"
+echo ""
+
 # ── Mostrar discos ─────────────────────────────────────────────────────────
 echo -e "${BOLD}Discos disponibles:${R}"
 lsblk -d -o NAME,SIZE,MODEL --noheadings | grep -v loop
@@ -95,8 +102,11 @@ if $UEFI; then
   mkdir -p /mnt/boot
   mount "$BOOT" /mnt/boot
 else
-  parted "$DISK" --script mkpart primary ext4 1MiB 100%
-  if [[ "$DISK_NAME" == nvme* ]]; then ROOT="${DISK}p1"; else ROOT="${DISK}1"; fi
+  parted "$DISK" --script \
+    mkpart bios_boot 1MiB 2MiB \
+    set 1 bios_grub on \
+    mkpart primary ext4 2MiB 100%
+  if [[ "$DISK_NAME" == nvme* ]]; then ROOT="${DISK}p2"; else ROOT="${DISK}2"; fi
   info "Formateando (BIOS)..."
   mkfs.ext4 -L nixos -q "$ROOT"
   info "Montando..."
@@ -110,10 +120,12 @@ nixos-generate-config --root /mnt
 
 # ── Preparar flake ─────────────────────────────────────────────────────────
 info "Preparando flake de instalación..."
-FLAKE=/tmp/hanix
+FLAKE=/run/hanix-work
 rm -rf "$FLAKE"
-cp -r /etc/hanix "$FLAKE"
-chmod -R u+w "$FLAKE"
+mkdir -p "$FLAKE"
+cp -rL /etc/hanix/. "$FLAKE/"
+find "$FLAKE" -type d -exec chmod u+rwx {} \;
+find "$FLAKE" -type f -exec chmod u+rw {} \;
 
 # Hardware config generado → flake
 cp /mnt/etc/nixos/hardware-configuration.nix "$FLAKE/"
@@ -125,12 +137,16 @@ HASHED=$(openssl passwd -6 "$PASSWORD")
 GPU_LINE=""
 [ -n "$GPU_MODULE" ] && GPU_LINE="  hanix.plymouthGpuModules = [ \"$GPU_MODULE\" ];"
 
+GRUB_LINE=""
+$UEFI || GRUB_LINE="  hanix.grubDevice = \"$DISK\";"
+
 cat > "$FLAKE/shared/personal.nix" << NIXEOF
 { ... }: {
   hanix.mainUser   = "$USERNAME";
   networking.hostName = "$HOSTNAME";
   users.users."$USERNAME".hashedPassword = "$HASHED";
 $GPU_LINE
+$GRUB_LINE
 }
 NIXEOF
 ok "Configuración preparada"
@@ -140,7 +156,8 @@ info "Instalando NixOS (puede tardar varios minutos)..."
 nixos-install \
   --root /mnt \
   --flake "$FLAKE#nixos" \
-  --no-root-passwd
+  --no-root-passwd \
+  --impure
 
 # ── Dejar el flake en el home del usuario ──────────────────────────────────
 info "Copiando flake al home del usuario..."
@@ -155,7 +172,8 @@ nixos-enter --root /mnt -- bash -c "
   if [ ! -d .git ]; then
     git init -q
     git add -A
-    git commit -q -m 'Initial commit' --author='HaNiX Installer <hanix@localhost>'
+    git add -f hardware-configuration.nix 2>/dev/null || true
+    git -c user.name='HaNiX Installer' -c user.email='hanix@localhost' commit -q -m 'Initial commit'
   fi
   git update-index --skip-worktree shared/personal.nix 2>/dev/null || true
   chown -R $USERNAME:users /home/$USERNAME/hanix/.git

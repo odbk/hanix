@@ -36,5 +36,3 @@ else
     read -r -p "Pulsa Enter para cerrar." _
 fi
 
-# Relanzar polybar para que nixupdates muestre 0 inmediatamente
-bash ~/.config/polybar/launch.sh &
