@@ -13,7 +13,9 @@ fi
 
 # Usa el hostname si existe en el flake, si no cae a #nixos
 HOST=$(hostname)
-if nix eval --impure "path:$FLAKE#nixosConfigurations.$HOST" &>/dev/null 2>&1; then
+CONFIGS=$(nix eval --impure --raw "path:$FLAKE#nixosConfigurations" \
+  --apply 'x: builtins.concatStringsSep " " (builtins.attrNames x)' 2>/dev/null)
+if echo " $CONFIGS " | grep -qw "$HOST"; then
   TARGET="path:$FLAKE#$HOST"
 else
   TARGET="path:$FLAKE#nixos"
