@@ -139,9 +139,6 @@ in
     Xft.lcdfilter: lcddefault
     XEOF
 
-    # ── Filtro de luz azul ───────────────────────────────────────────────
-    ${pkgs.redshift}/bin/redshift-gtk -l 40.4:-3.7 &
-
     # ── Wallpaper por monitor ─────────────────────────────────────────────
     # Primary (ultrawide): --maximize → imagen completa sin recortar
     # Secondary (FHD 16:9): --zoom    → rellena sin distorsión
