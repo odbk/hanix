@@ -658,6 +658,45 @@
 
 <hr class="divider" />
 
+<!-- Mantener actualizaciones -->
+<section id="updates">
+  <p class="section-label">// mantenimiento</p>
+  <h2 class="section-title">Mantenerse actualizado</h2>
+  <p style="color:var(--dim);max-width:640px;margin:0 auto 24px;">
+    Una vez instalado, puedes seguir los cambios del proyecto sin necesidad de reinstalar.
+  </p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Añade el remoto (solo una vez)</h4>
+        <div class="code">cd ~/hanix
+git remote add origin https://github.com/odbk/hanix
+git fetch origin
+git branch --set-upstream-to=origin/main main</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Actualiza cuando quieras</h4>
+        <div class="code">git pull &amp;&amp; ./rebuild</div>
+      </div>
+    </div>
+  </div>
+  <details style="max-width:640px;margin:24px auto 0;color:var(--dim);font-size:13px;">
+    <summary style="cursor:pointer;color:var(--green);font-family:monospace;">// para los que saben git</summary>
+    <div style="margin-top:12px;line-height:1.7;">
+      El instalador genera un repo local con tu <code>personal.nix</code> y <code>hardware-configuration.nix</code>.
+      El primero es <code>skip-worktree</code> (git lo ignora), el segundo está en <code>.gitignore</code>.
+      Si personalizas otros archivos, commitéalos localmente antes de hacer <code>git pull</code> para evitar conflictos.
+      No hace falta push a ningún sitio — tus cambios se quedan en tu máquina.
+    </div>
+  </details>
+</section>
+
+<hr class="divider" />
+
 <!-- Screenshots -->
 <section id="screenshots">
   <p class="section-label">// aspecto</p>
