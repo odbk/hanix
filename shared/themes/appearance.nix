@@ -86,8 +86,8 @@ in
             echo -e '[Icon Theme]\nInherits=Bibata-Modern-Classic' \
               > "${home}/.icons/default/index.theme"
             # Symlink wordlists al home del usuario
-            if [ -d /run/current-system/sw/share/wordlists ] && [ -d "${home}" ]; then
-              ln -sfn /run/current-system/sw/share/wordlists "${home}/wordlists"
+            if [ -d "${pkgs.wordlists}/share/wordlists" ] && [ -d "${home}" ]; then
+              ln -sfn "${pkgs.wordlists}/share/wordlists" "${home}/wordlists"
               chown -h "${u}:users" "${home}/wordlists" 2>/dev/null || true
             fi
           '')
