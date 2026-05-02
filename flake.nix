@@ -14,7 +14,7 @@
     mkPkgs = pkgsInput: import pkgsInput {
       inherit system;
       config.allowUnfree = true;
-      config.permittedInsecurePackages = [ "mbedtls-2.28.10" ];
+      config.permittedInsecurePackages = [ "mbedtls-2.28.10" "python-2.7.18.12" ];
     };
 
     unstablePkgs = mkPkgs unstable;
@@ -49,7 +49,7 @@
     # Módulo con config de nixpkgs (allowUnfree, etc.)
     nixpkgsModule = {
       nixpkgs.config.allowUnfree = true;
-      nixpkgs.config.permittedInsecurePackages = [ "mbedtls-2.28.10" ];
+      nixpkgs.config.permittedInsecurePackages = [ "mbedtls-2.28.10" "python-2.7.18.12" ];
     };
 
     # Función para crear configuraciones NixOS con argumentos comunes
