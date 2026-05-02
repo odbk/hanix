@@ -89,6 +89,8 @@
     '';
   };
 
+  environment.etc."hosts".mode = "0666";
+
   # This value determines the NixOS release from which the default
   system.stateVersion = "24.11"; # Did you read the comment?
 }
