@@ -174,10 +174,13 @@ nixos-enter --root /mnt -- bash -c "
     git add -A
     git add -f hardware-configuration.nix 2>/dev/null || true
     git -c user.name='HaNiX Installer' -c user.email='hanix@localhost' commit -q -m 'Initial commit'
+    git config pull.rebase false
+    git config user.email "hanix@localhost"
+    git config user.name "HaNiX"
     git remote add origin https://github.com/odbk/hanix
     git fetch origin -q 2>/dev/null || true
-    git -c user.name='HaNiX Installer' -c user.email='hanix@localhost' \
-      merge origin/main --allow-unrelated-histories --no-edit -s ours -q 2>/dev/null || true
+    git update-index --skip-worktree shared/personal.nix 2>/dev/null || true
+    git merge --allow-unrelated-histories --no-edit -q origin/main 2>/dev/null || true
     git branch --set-upstream-to=origin/main main 2>/dev/null || true
   fi
   git update-index --skip-worktree shared/personal.nix 2>/dev/null || true
