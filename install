@@ -170,10 +170,13 @@ nixos-enter --root /mnt -- bash -c "
   chown -R $USERNAME:users /home/$USERNAME/hanix
   cd /home/$USERNAME/hanix
   if [ ! -d .git ]; then
-    git init -q
+    git init -b main -q
     git add -A
     git add -f hardware-configuration.nix 2>/dev/null || true
     git -c user.name='HaNiX Installer' -c user.email='hanix@localhost' commit -q -m 'Initial commit'
+    git remote add origin https://github.com/odbk/hanix
+    git fetch origin -q 2>/dev/null || true
+    git branch --set-upstream-to=origin/main main 2>/dev/null || true
   fi
   git update-index --skip-worktree shared/personal.nix 2>/dev/null || true
   chown -R $USERNAME:users /home/$USERNAME/hanix/.git
