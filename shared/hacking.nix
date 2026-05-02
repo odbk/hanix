@@ -59,6 +59,7 @@
     bloodhound
     evil-winrm
     kerbrute
+    python3
     python3Packages.impacket
 
     # Tunneling y Pivoting
