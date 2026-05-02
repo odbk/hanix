@@ -61,6 +61,9 @@
     kerbrute
     python3
     python3Packages.impacket
+    python3Packages.pwntools
+    ruby
+    jdk
 
     # Tunneling y Pivoting
     ligolo-ng
