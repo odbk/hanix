@@ -68,6 +68,17 @@
     binutils
     gnumake
     hexedit
+    python3
+    python2
+    python3Packages.requests
+    python3Packages.beautifulsoup4
+    python3Packages.paramiko
+    python3Packages.pycryptodome
+    python3Packages.pyopenssl
+    python3Packages.colorama
+    python3Packages.termcolor
+    ruby
+    jdk
   ]) ++
   (with unstablePkgs; [
     claude-code

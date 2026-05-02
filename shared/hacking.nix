@@ -59,19 +59,8 @@
     bloodhound
     evil-winrm
     kerbrute
-    python3
-    python2
     python3Packages.impacket
-    python3Packages.requests
-    python3Packages.beautifulsoup4
-    python3Packages.paramiko
-    python3Packages.pycryptodome
-    python3Packages.pyopenssl
-    python3Packages.colorama
-    python3Packages.termcolor
     python3Packages.pwntools
-    ruby
-    jdk
 
     # Tunneling y Pivoting
     ligolo-ng
