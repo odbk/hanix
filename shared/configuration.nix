@@ -91,6 +91,9 @@
 
   environment.etc."hosts".mode = "0644";
 
+  hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
+
   # This value determines the NixOS release from which the default
   system.stateVersion = "24.11"; # Did you read the comment?
 }
