@@ -17,10 +17,6 @@
     # ── Pantalla ──────────────────────────────────────────
     redshift                        # filtro de luz azul con applet de bandeja
 
-    # ── Gaming ───────────────────────────────────────────
-    steam
-    steam-run
-
     # ── Utilidades de escritorio ──────────────────────────
     fastfetch
     vlc
