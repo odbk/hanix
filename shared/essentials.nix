@@ -33,6 +33,7 @@
 
     wget
     curl
+    openssl
     jq
     dig
     tmux
