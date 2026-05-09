@@ -4,9 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
   };
 
-  outputs = { self, nixpkgs, unstable, ... } @ inputs:
+  outputs = { self, nixpkgs, unstable, nixos-hardware, ... } @ inputs:
   let
     system = "x86_64-linux";
 
@@ -57,7 +58,7 @@
       inherit system;
       modules = commonModules ++ extraModules ++ [ nixpkgsModule ];
       specialArgs = {
-        inherit unstablePkgs inputs;
+        inherit unstablePkgs inputs nixos-hardware;
         isIso = false;
       };
     };
