@@ -44,7 +44,7 @@ check_input() {
 }
 
 # Comprobamos los inputs principales del flake
-for node in nixpkgs unstable nixvim; do
+for node in nixpkgs unstable; do
     check_input "$node"
 done
 

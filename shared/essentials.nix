@@ -54,7 +54,7 @@
     geany
     blueman
     wireplumber
-    (if pkgs ? crosspipe then pkgs.crosspipe else pkgs.helvum)
+    helvum
     unzip
     udiskie                        # automontaje USBs con notificación
     libnotify                      # notify-send para scripts

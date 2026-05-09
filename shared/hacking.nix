@@ -38,8 +38,7 @@
     radare2
     cutter
     binwalk
-    gdb
-    #pwndbg  # no disponible en unstable
+    #pwndbg  # pendiente verificar disponibilidad en nixpkgs
     ltrace
     strace
     checksec
