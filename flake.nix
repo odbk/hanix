@@ -4,10 +4,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixos-hardware.url = "github:NixOS/nixos-hardware";
   };
 
-  outputs = { self, nixpkgs, unstable, nixos-hardware, ... } @ inputs:
+  outputs = { self, nixpkgs, unstable, ... } @ inputs:
   let
     system = "x86_64-linux";
 
