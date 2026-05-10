@@ -20,7 +20,7 @@ let
       --remember \
       --remember-session \
       --xsessions "${config.services.displayManager.sessionData.desktops}/share/xsessions" \
-      --xsession-wrapper "${pkgs.xinit or pkgs.xorg.xinit}/bin/startx /usr/bin/env" \
+      --xsession-wrapper "${pkgs.xinit or pkgs.xorg.xinit}/bin/startx" \
       --greeting "$(cat ${hanixArt})" \
       --greet-align left \
       --theme "border=green;text=green;prompt=green;time=green;action=green;button=green;container=black;input=green" \
