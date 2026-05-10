@@ -69,6 +69,14 @@
     feroxbuster
     sslscan
 
+    # Esteganografía (CTF)
+    steghide
+    stegseek
+    exiftool
+
+    # Análisis / SMT solver (crypto CTF)
+    z3
+
     # Anonimato y Proxies
     tor
     proxychains
