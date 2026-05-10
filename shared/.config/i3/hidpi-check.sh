@@ -22,8 +22,8 @@ EOF
 }
 
 scale_rasi() {
-    [ -f /tmp/hanix-hidpi-rasi-scaled ] && return
-    touch /tmp/hanix-hidpi-rasi-scaled
+    [ -f "$HOME/.config/hanix-hidpi-rasi-scaled" ] && return
+    touch "$HOME/.config/hanix-hidpi-rasi-scaled"
     for RASI_DIR in "$HOME/.config/polybar/scripts/rofi" "$HOME/.config/rofi"; do
         [ -d "$RASI_DIR" ] || continue
     for f in "$RASI_DIR"/*.rasi; do
