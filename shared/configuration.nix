@@ -30,6 +30,11 @@
     audio.enable = true;
     pulse.enable = true;   # compatibilidad PulseAudio (pavucontrol, i3status-rust, pactl)
     alsa.enable  = true;   # compatibilidad ALSA
+    wireplumber.extraConfig."51-bt-fallback" = {
+      # Al desconectar BT, los streams vuelven al sink por defecto (altavoz)
+      # en vez de quedarse "huérfanos" sin sonido
+      "wireplumber.settings"."restore-stream.restore-target" = false;
+    };
   };
   
   # networking.hostName — definido en cada hosts/*.nix del flake

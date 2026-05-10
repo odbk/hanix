@@ -55,6 +55,8 @@
     blueman
     wireplumber
     helvum
+    pavucontrol                     # mixer gráfico (click en icono de volumen)
+    pasystray                       # applet de volumen en la bandeja del sistema
     unzip
     udiskie                        # automontaje USBs con notificación
     libnotify                      # notify-send para scripts

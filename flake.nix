@@ -57,7 +57,7 @@
       inherit system;
       modules = commonModules ++ extraModules ++ [ nixpkgsModule ];
       specialArgs = {
-        inherit unstablePkgs inputs nixos-hardware;
+        inherit unstablePkgs inputs;
         isIso = false;
       };
     };
