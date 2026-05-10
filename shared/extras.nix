@@ -11,9 +11,6 @@
     discord
     ferdium
 
-    # ── Escritorio remoto ─────────────────────────────────
-    rustdesk
-
     # ── Pantalla ──────────────────────────────────────────
     redshift                        # filtro de luz azul con applet de bandeja
 
