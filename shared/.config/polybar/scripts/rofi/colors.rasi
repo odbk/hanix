@@ -1,10 +1,10 @@
-/* colors */
+/* Paleta HaNiX — Catppuccin Mocha + verde matrix */
 
 * {
-  al:   #00000000;
-  bg:   #1F1F1FFF;
-  bga:  #546e7a33;
-  bar:  #FFFFFFFF;
-  fg:   #FFFFFFFF;
-  ac:   #546e7aFF;
+  al:  #00000000;
+  bg:  #1e1e2e;
+  bga: #1a6b1a;
+  bar: #1e1e2e;
+  fg:  #cdd6f4;
+  ac:  #00ff41;
 }

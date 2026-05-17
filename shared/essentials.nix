@@ -37,6 +37,16 @@
     jq
     dig
     tmux
+
+    # ── Diagnóstico de hardware y red ─────────────────────
+    usbutils      # lsusb
+    pciutils      # lspci
+    lshw          # info completa de hardware
+    iw            # gestión de interfaces WiFi
+    ethtool       # info y config de tarjeta de red
+    mtr           # traceroute + ping combinado
+    whois         # consulta de dominios
+    acpi          # batería, temperatura y AC desde CLI
     (pkgs.thunar or pkgs.xfce.thunar)
     (pkgs.thunar-volman or pkgs.xfce.thunar-volman)  # montaje automático de USBs
     gvfs
