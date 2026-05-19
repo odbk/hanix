@@ -5,6 +5,8 @@
     [ # Include the results of the hardware scan.
     ];
 
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   environment.systemPackages = with pkgs; [
 
     # Explotación y Post-explotación

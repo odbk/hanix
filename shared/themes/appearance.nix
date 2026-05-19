@@ -113,6 +113,16 @@ in
     done | sort -rn | head -1 | awk '{print $2}')
     [ -n "$WIDEST" ] && xrandr --output "$WIDEST" --primary
 
+    # ── Activar outputs conectados sin modo activo (ej: tercer monitor en iGPU) ─
+    # Busca el output activo más a la derecha y coloca ahí los inactivos.
+    _REF=$(xrandr | grep ' connected' | \
+      awk '{for(i=1;i<=NF;i++) if($i~/[0-9]+x[0-9]+\+[0-9]+\+[0-9]+/){split($i,p,"+"); print p[2]" "$1; break}}' | \
+      sort -rn | head -1 | awk '{print $2}')
+    [ -z "$_REF" ] && _REF="$WIDEST"
+    for _OUT in $(xrandr | grep ' connected' | grep -v '+[0-9]' | awk '{print $1}'); do
+      xrandr --output "$_OUT" --auto --right-of "$_REF" 2>/dev/null || true
+    done
+
     # ── Auto-detectar DPI del monitor principal ──────────────────────────
     # Lee las dimensiones físicas del monitor desde EDID (via xrandr) y
     # calcula el DPI real. Fallback a 96 si no se puede determinar.
@@ -139,18 +149,23 @@ in
     Xft.lcdfilter: lcddefault
     XEOF
 
-    # ── Wallpaper por monitor ─────────────────────────────────────────────
-    # Primary (ultrawide): --maximize → imagen completa sin recortar
-    # Secondary (FHD 16:9): --zoom    → rellena sin distorsión
+    # ── Wallpaper por monitor (todos los outputs activos) ────────────────
     WALL="$HOME/.config/wallpaper.png"
-    PRIMARY_OUT=$(xrandr | grep -m1 ' connected primary' | awk '{print $1}')
-    SECONDARY_OUT=$(xrandr | grep ' connected' | grep -v ' primary' | awk '{print $1}' | head -1)
-    if [ -n "$PRIMARY_OUT" ] && [ -n "$SECONDARY_OUT" ]; then
-      ${pkgs.xwallpaper}/bin/xwallpaper \
-        --output "$PRIMARY_OUT"   --maximize "$WALL" \
-        --output "$SECONDARY_OUT" --zoom     "$WALL"
-    else
-      ${pkgs.xwallpaper}/bin/xwallpaper --zoom "$WALL"
+    if [ -f "$WALL" ]; then
+      PRIMARY_OUT=$(xrandr | grep -m1 ' connected primary' | awk '{print $1}')
+      XWALL_ARGS=""
+      for _M in $(xrandr | grep ' connected' | grep '+[0-9]' | awk '{print $1}'); do
+        if [ "$_M" = "$PRIMARY_OUT" ]; then
+          XWALL_ARGS="$XWALL_ARGS --output $_M --maximize $WALL"
+        else
+          XWALL_ARGS="$XWALL_ARGS --output $_M --zoom $WALL"
+        fi
+      done
+      if [ -n "$XWALL_ARGS" ]; then
+        ${pkgs.xwallpaper}/bin/xwallpaper $XWALL_ARGS
+      else
+        ${pkgs.xwallpaper}/bin/xwallpaper --zoom "$WALL"
+      fi
     fi
   '';
 
