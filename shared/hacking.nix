@@ -35,6 +35,12 @@
     dnsenum
     subfinder
 
+    # Android Auditoría
+    android-studio   # IDE + emulador + SDK manager
+    android-tools    # adb, fastboot
+    apktool          # desensamblar APK (smali + recursos)
+    jadx             # decompila APK a Java/Kotlin legible
+
     # Ingeniería Inversa y Análisis Binario
     ghidra
     radare2
@@ -70,6 +76,7 @@
     nuclei
     feroxbuster
     sslscan
+    httpx
 
     # Esteganografía (CTF)
     steghide

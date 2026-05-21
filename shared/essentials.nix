@@ -55,6 +55,7 @@
     foot
     firefox
     openvpn
+    sshpass
     chromium
     google-chrome
     vscode

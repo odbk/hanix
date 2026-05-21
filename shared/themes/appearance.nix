@@ -155,11 +155,7 @@ in
       PRIMARY_OUT=$(xrandr | grep -m1 ' connected primary' | awk '{print $1}')
       XWALL_ARGS=""
       for _M in $(xrandr | grep ' connected' | grep '+[0-9]' | awk '{print $1}'); do
-        if [ "$_M" = "$PRIMARY_OUT" ]; then
-          XWALL_ARGS="$XWALL_ARGS --output $_M --maximize $WALL"
-        else
-          XWALL_ARGS="$XWALL_ARGS --output $_M --zoom $WALL"
-        fi
+        XWALL_ARGS="$XWALL_ARGS --output $_M --zoom $WALL"
       done
       if [ -n "$XWALL_ARGS" ]; then
         ${pkgs.xwallpaper}/bin/xwallpaper $XWALL_ARGS

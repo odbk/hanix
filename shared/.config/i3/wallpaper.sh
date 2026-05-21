@@ -40,7 +40,7 @@ fi
 XWALL_ARGS=()
 while IFS= read -r MON; do
     if [ "$MON" = "$PRIMARY" ]; then
-        XWALL_ARGS+=(--output "$MON" --maximize "$WALL_PRIMARY")
+        XWALL_ARGS+=(--output "$MON" --zoom "$WALL_PRIMARY")
     else
         XWALL_ARGS+=(--output "$MON" --zoom "$WALL_STD")
     fi
