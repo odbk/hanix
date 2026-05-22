@@ -77,6 +77,7 @@
     feroxbuster
     sslscan
     httpx
+    gowitness
 
     # Esteganografía (CTF)
     steghide

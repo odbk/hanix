@@ -103,27 +103,7 @@ in
     [ -f "$HOME/.Xresources" ] && ${pkgs.xorg.xrdb}/bin/xrdb -merge "$HOME/.Xresources"
     ${pkgs.xorg.xsetroot}/bin/xsetroot -cursor_name left_ptr
 
-    # ── Marcar como primary el monitor más ancho ──────────────────────────
-    # Encuentra el monitor conectado con mayor resolución horizontal y lo
-    # establece como primary (corrige el caso en que X elige el secundario).
-    WIDEST=$(xrandr | grep ' connected' | while read -r LINE; do
-      NAME=$(echo "$LINE" | awk '{print $1}')
-      W=$(echo "$LINE" | grep -oP '\d+x\d+\+\d+\+\d+' | grep -oP '^\d+')
-      [ -n "$W" ] && echo "$W $NAME"
-    done | sort -rn | head -1 | awk '{print $2}')
-    [ -n "$WIDEST" ] && xrandr --output "$WIDEST" --primary
-
-    # ── Activar outputs conectados sin modo activo (ej: tercer monitor en iGPU) ─
-    # Busca el output activo más a la derecha y coloca ahí los inactivos.
-    _REF=$(xrandr | grep ' connected' | \
-      awk '{for(i=1;i<=NF;i++) if($i~/[0-9]+x[0-9]+\+[0-9]+\+[0-9]+/){split($i,p,"+"); print p[2]" "$1; break}}' | \
-      sort -rn | head -1 | awk '{print $2}')
-    [ -z "$_REF" ] && _REF="$WIDEST"
-    for _OUT in $(xrandr | grep ' connected' | grep -v '+[0-9]' | awk '{print $1}'); do
-      xrandr --output "$_OUT" --auto --right-of "$_REF" 2>/dev/null || true
-    done
-
-    # ── Auto-detectar DPI del monitor principal ──────────────────────────
+# ── Auto-detectar DPI del monitor principal ──────────────────────────
     # Lee las dimensiones físicas del monitor desde EDID (via xrandr) y
     # calcula el DPI real. Fallback a 96 si no se puede determinar.
     PRIMARY_LINE=$(xrandr | grep -m1 ' connected primary')

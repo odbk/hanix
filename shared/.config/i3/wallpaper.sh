@@ -1,23 +1,8 @@
 #!/usr/bin/env bash
-# Establece el monitor primario (el más ancho) y aplica el wallpaper.
-# Soporta cualquier número de monitores activos.
+# Aplica layout de monitores (si existe) y wallpaper a todos los outputs activos.
 
-# ── 1. Marcar como primary el monitor más ancho ──────────────
-WIDEST=$(xrandr | grep ' connected' | while read -r LINE; do
-  NAME=$(echo "$LINE" | awk '{print $1}')
-  W=$(echo "$LINE" | grep -oP '\d+x\d+\+\d+\+\d+' | grep -oP '^\d+')
-  [ -n "$W" ] && echo "$W $NAME"
-done | sort -rn | head -1 | awk '{print $2}')
-[ -n "$WIDEST" ] && xrandr --output "$WIDEST" --primary
-
-# ── 1b. Activar outputs conectados sin modo (ej: tercer monitor en iGPU) ─
-_REF=$(xrandr | grep ' connected' | \
-  awk '{for(i=1;i<=NF;i++) if($i~/[0-9]+x[0-9]+\+[0-9]+\+[0-9]+/){split($i,p,"+"); print p[2]" "$1; break}}' | \
-  sort -rn | head -1 | awk '{print $2}')
-[ -z "$_REF" ] && _REF="$WIDEST"
-for _OUT in $(xrandr | grep ' connected' | grep -v '+[0-9]' | awk '{print $1}'); do
-  xrandr --output "$_OUT" --auto --right-of "$_REF" 2>/dev/null || true
-done
+# ── Layout específico de esta máquina ────────────────────────
+[ -f "$HOME/.config/i3/monitor-setup.sh" ] && bash "$HOME/.config/i3/monitor-setup.sh"
 
 # ── 2. Elegir wallpaper según ratio del monitor primary ───────
 PRIMARY=$(xrandr | grep -m1 ' connected primary' | awk '{print $1}')
