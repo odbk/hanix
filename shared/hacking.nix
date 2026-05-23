@@ -101,13 +101,17 @@
     dsniff
     netcat
     socat
-    # WiFi
+    # WiFi — auditoría WPA/WPS
     aircrack-ng
-    pixiewps
-    wifite2
-    hcxtools        # captura y conversión de handshakes WPA
-    hcxdumptool     # captura de paquetes WiFi (PMKID, EAPOL)
-    cowpatty        # fuerza bruta WPA PSK offline
+    pixiewps        # pixie dust offline (calcula PSK desde PKE/PKR/E-Hash)
+    reaverwps-t6x   # WPS PIN brute force + pixie dust integrado (-K)
+    bully           # alternativa a reaver para APs problemáticos con WPS
+    wifite2         # automatiza todo el proceso (reaver/aircrack/hcxtools)
+    mdk4            # deauth masivo, beacon flood (fuerza reconexión/handshake)
+    hcxtools        # conversión handshakes WPA (cap → hc22000 para hashcat)
+    hcxdumptool     # captura PMKID y EAPOL en modo monitor
+    cowpatty        # fuerza bruta WPA PSK offline contra capturas
+    kismet          # sniffer/IDS WiFi pasivo, descubrimiento de redes ocultas
   ];
 
 }
