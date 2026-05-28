@@ -112,4 +112,6 @@
     kismet          # sniffer/IDS WiFi pasivo, descubrimiento de redes ocultas
   ];
 
+  hardware.graphics.extraPackages = [ pkgs.rocmPackages.clr.icd ];
+
 }
