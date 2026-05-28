@@ -11,7 +11,9 @@
 
 ## Screenshots
 
-> ⚠️ Screenshots pendientes de actualizar
+| Login | Desktop | Shell |
+|-------|---------|-------|
+| ![greetd](screenshots/greetd.png) | ![desktop](screenshots/screen1.png) | ![shell](screenshots/shell.png) |
 
 ## Entorno de escritorio
 
