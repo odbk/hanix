@@ -110,6 +110,7 @@
     hcxdumptool     # captura PMKID y EAPOL en modo monitor
     cowpatty        # fuerza bruta WPA PSK offline contra capturas
     kismet          # sniffer/IDS WiFi pasivo, descubrimiento de redes ocultas
+    hostapd         # daemon AP — levantar punto de acceso propio
   ];
 
   hardware.graphics.extraPackages = [ pkgs.rocmPackages.clr.icd ];
