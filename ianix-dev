@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+IANIX_REPO_ROOT="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+
+if ! command -v llama-server >/dev/null 2>&1; then
+  for IANIX_LLAMA_SERVER in /nix/store/*-llama-cpp-*/bin/llama-server; do
+    if [ -x "$IANIX_LLAMA_SERVER" ]; then
+      export PATH="$(dirname "$IANIX_LLAMA_SERVER"):$PATH"
+      break
+    fi
+  done
+fi
+
+export IANIX_MODEL="${IANIX_MODEL:-$IANIX_REPO_ROOT/.ianix/model.gguf}"
+export IANIX_WORDLIST="${IANIX_WORDLIST:-/etc/hanix/wordlists/seclists/Discovery/Web-Content/raft-small-words.txt}"
+export IANIX_ROCKYOU="${IANIX_ROCKYOU:-/etc/hanix/wordlists/rockyou.txt}"
+export IANIX_NUCLEI_TEMPLATES="${IANIX_NUCLEI_TEMPLATES:-/etc/hanix-data/nuclei-templates}"
+export IANIX_YARA_RULES="${IANIX_YARA_RULES:-$IANIX_REPO_ROOT/shared/ianix/yara/hanix-baseline.yar}"
+
+exec python3 "$IANIX_REPO_ROOT/shared/ianix/ianix.py" "$@"

@@ -1,12 +1,20 @@
 { config, pkgs, lib, modulesPath, flakeRoot, ... }:
 
+let
+  # Materializar el flake como una derivación evita que environment.etc vuelva
+  # a importar la ruta temporal creada al evaluar `path:.`. Esa segunda copia
+  # podía desaparecer durante `nix flake check --no-build`.
+  embeddedFlake = pkgs.runCommandLocal "hanix-source" { } ''
+    cp -r ${flakeRoot} "$out"
+  '';
+in
 {
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-base.nix"
   ];
 
   # ── Flake embebido en la ISO para instalación offline ─────────────────────
-  environment.etc."hanix".source = flakeRoot; # raíz del repo → /etc/hanix
+  environment.etc."hanix".source = embeddedFlake; # raíz del repo → /etc/hanix
 
   # ── Comando hanix-install disponible en el live ───────────────────────────
   environment.systemPackages = [

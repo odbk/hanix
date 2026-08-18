@@ -34,8 +34,6 @@
       setopt hist_ignore_all_dups hist_save_no_dups hist_find_no_dups
 
       # ── fzf — búsqueda fuzzy con tema matrix ─────────────
-      source ${pkgs.fzf}/share/fzf/key-bindings.zsh
-      source ${pkgs.fzf}/share/fzf/completion.zsh
       export FZF_DEFAULT_OPTS="
         --color=fg:#cdd6f4,bg:#1e1e2e,hl:#00ff41
         --color=fg+:#00ff41,bg+:#313244,hl+:#00ff41

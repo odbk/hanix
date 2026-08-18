@@ -35,31 +35,29 @@
     curl
     openssl
     jq
+    ripgrep
     dig
-    tmux
+    file
+    imagemagick
 
     # ── Diagnóstico de hardware y red ─────────────────────
     usbutils      # lsusb
     pciutils      # lspci
     lshw          # info completa de hardware
+    exfatprogs    # fsck/mkfs para pendrives exFAT
+    ntfs3g        # herramientas NTFS y montaje FUSE si ntfs3 da problemas
     iw            # gestión de interfaces WiFi
     ethtool       # info y config de tarjeta de red
-    mtr           # traceroute + ping combinado
     whois         # consulta de dominios
     acpi          # batería, temperatura y AC desde CLI
-    (pkgs.thunar or pkgs.xfce.thunar)
-    (pkgs.thunar-volman or pkgs.xfce.thunar-volman)  # montaje automático de USBs
     gvfs
     samba                        # backend SMB para gvfs/Thunar
     alacritty
     foot
-    firefox
     openvpn
     sshpass
     chromium
     google-chrome
-    vscode
-    git
     networkmanagerapplet
     killall
     geany
@@ -73,7 +71,6 @@
     libnotify                      # notify-send para scripts
     dislocker                      # montar particiones BitLocker de Windows
     brightnessctl                  # control de brillo (teclas Fn portátil)
-    fzf                            # búsqueda fuzzy (Ctrl+R historial, Ctrl+T archivos)
 
     ### DEVOS
     nasm
@@ -92,7 +89,6 @@
     python3Packages.colorama
     python3Packages.termcolor
     ruby
-    jdk
   ]) ++
   (with unstablePkgs; [
     claude-code

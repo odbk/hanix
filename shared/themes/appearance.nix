@@ -27,6 +27,7 @@ let
       --asterisks \
       --window-padding 2
   '';
+
 in
 
 {
@@ -36,6 +37,12 @@ in
 
   # Esqueleto para usuarios nuevos
   environment.etc."skel/.config".source = ../.config;
+  # Evita que Zsh muestre zsh-newuser-install en el primer terminal. La
+  # configuración real (prompt, aliases, historial, etc.) es global y vive en
+  # programs.zsh; este fichero solo marca el perfil como ya inicializado.
+  environment.etc."skel/.zshrc".text = ''
+    # HaNiX configura Zsh globalmente mediante NixOS.
+  '';
   environment.etc."skel/.Xresources".text = ''
     Xft.dpi: 96
     Xft.antialias: 1
@@ -80,6 +87,9 @@ in
             fi
             if [ -f /etc/skel/.Xresources ] && [ -d "${home}" ]; then
               install -o "${u}" -g users /etc/skel/.Xresources "${home}/.Xresources"
+            fi
+            if [ -f /etc/skel/.zshrc ] && [ -d "${home}" ] && [ ! -e "${home}/.zshrc" ]; then
+              install -m 0644 -o "${u}" -g users /etc/skel/.zshrc "${home}/.zshrc"
             fi
             # Cursor theme — necesario para que X11 lo aplique
             mkdir -p "${home}/.icons/default"
@@ -165,14 +175,11 @@ in
   ############################
 
   environment.systemPackages = with pkgs; [
-    i3
-    i3lock-color
     dunst
     kitty
     rofi
     xdg-utils
-    xdg-desktop-portal
-    xdg-desktop-portal-gtk
+    xss-lock              # bloqueo automático al suspender; i3 lo lanza en general.conf
     maim xclip             # captura de pantalla al portapapeles
     flameshot              # captura interactiva con anotaciones
     polkit_gnome           # agente polkit gráfico (necesario para gparted sin sudo)

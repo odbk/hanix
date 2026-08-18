@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, isIso ? false, ... }:
 
 {
   imports =
@@ -15,6 +15,21 @@
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # Evita que las máquinas instaladas acumulen indefinidamente generaciones y
+  # rutas huérfanas. Se conservan 30 días de historial para poder hacer rollback.
+  # En la ISO live no aporta nada: su store es de solo lectura y desaparece al
+  # apagar, por eso no se programan timers allí.
+  nix.gc = {
+    automatic = lib.mkDefault (!isIso);
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+    randomizedDelaySec = "45min";
+  };
+  nix.optimise = {
+    automatic = lib.mkDefault (!isIso);
+    dates = [ "weekly" ];
+  };
 
   system.nixos.distroName = "HaNiX";
   system.nixos.label      = lib.mkForce "26.04";
@@ -42,6 +57,16 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+
+  # ── SSH ────────────────────────────────────────────────────
+  # openFirewall (por defecto true) abre el puerto 22.
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = true;   # login por contraseña (LAN). Pon false si usas solo claves.
+      PermitRootLogin = "no";          # nunca root directo por SSH
+    };
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Madrid";
@@ -81,17 +106,12 @@
   };
   services.blueman.enable = true;
 
-  # ── Wordlists — descomprimir rockyou al primer rebuild ────────
-  system.activationScripts.wordlists = {
-    text = ''
-      ROCKYOU_GZ="${pkgs.rockyou}/share/wordlists/rockyou.txt.gz"
-      DEST="/usr/share/wordlists/rockyou.txt"
-      if [ -f "$ROCKYOU_GZ" ] && [ ! -f "$DEST" ]; then
-        mkdir -p /usr/share/wordlists
-        ${pkgs.gzip}/bin/gunzip -c "$ROCKYOU_GZ" > "$DEST"
-        chmod 644 "$DEST"
-      fi
-    '';
+  # ── Impresión: CUPS + descubrimiento de red por mDNS (Avahi) ──
+  services.printing.enable = true;
+  services.avahi = {
+    enable       = true;
+    nssmdns4     = true;   # resolución mDNS (.local) de impresoras de red
+    openFirewall = true;   # abre UDP 5353 (mDNS)
   };
 
   environment.etc."hosts".mode = "0644";

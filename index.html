@@ -447,6 +447,9 @@
 </nav>
 
 <!-- Hero -->
+<button id="langToggle" title="Language / Idioma"
+  style="position:fixed;top:16px;right:16px;z-index:900;background:rgba(0,20,0,0.7);color:var(--green);border:1px solid #1f3b1f;border-radius:4px;padding:6px 12px;font-family:monospace;font-size:13px;cursor:pointer;backdrop-filter:blur(4px);">EN</button>
+
 <section id="hero">
   <div class="matrix-bg" id="matrixBg"></div>
 
@@ -454,10 +457,11 @@
 
   <p class="hero-tag">NixOS · Hacking · LiveOS</p>
   <h1 class="hero-title">Hack. Build. Own.</h1>
-  <p class="hero-sub">
+  <p class="hero-sub" data-en="LiveOS built on <em>NixOS</em> for offensive security.<br>Reproducible, declarative, scales to <em>HiDPI</em>.<br>Boots from USB. No install.<br><strong>Local, offline AI</strong> that writes and explains commands.">
     LiveOS basado en <em>NixOS</em> orientado a seguridad ofensiva.<br>
     Reproducible, declarativo, escalable a <em>HiDPI</em>.<br>
-    Arranca desde USB. Sin instalación.
+    Arranca desde USB. Sin instalación.<br>
+    <strong>IA local y offline</strong> que escribe y explica comandos.
   </p>
 
   <div class="terminal-box">
@@ -473,10 +477,10 @@
   </div>
 
   <div class="btn-row">
-    <a class="btn btn-primary" href="https://mega.nz/file/QVcnUCLT#u6oi-oC_AERoQ8pcJ_vo2f7glDSPC_wWbZ_T77K86T4" target="_blank">
+    <a class="btn btn-primary" href="https://mega.nz/file/QVcnUCLT#u6oi-oC_AERoQ8pcJ_vo2f7glDSPC_wWbZ_T77K86T4" target="_blank" data-en="⬇ Download ISO">
       ⬇ Descargar ISO
     </a>
-    <a class="btn btn-secondary" href="https://github.com/odbk/hanix" target="_blank">
+    <a class="btn btn-secondary" href="https://github.com/odbk/hanix" target="_blank" data-en="⌥ View on GitHub">
       ⌥ Ver en GitHub
     </a>
   </div>
@@ -486,38 +490,112 @@
 
 <!-- Features -->
 <section id="features">
-  <p class="section-label">// por qué HaNiX</p>
-  <h2 class="section-title">Diseñado para el campo</h2>
+  <p class="section-label" data-en="// why HaNiX">// por qué HaNiX</p>
+  <h2 class="section-title" data-en="Built for the field">Diseñado para el campo</h2>
   <div class="features-grid">
     <div class="feature-card">
       <div class="feature-icon">⚙</div>
-      <div class="feature-name">DECLARATIVO</div>
-      <div class="feature-desc">Basado en NixOS. Todo el sistema definido en código — reproducible en cualquier máquina, siempre.</div>
+      <div class="feature-name" data-en="DECLARATIVE">DECLARATIVO</div>
+      <div class="feature-desc" data-en="Built on NixOS. The whole system defined as code — reproducible on any machine, always.">Basado en NixOS. Todo el sistema definido en código — reproducible en cualquier máquina, siempre.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">⚡</div>
-      <div class="feature-name">LIVE USB</div>
-      <div class="feature-desc">Arranca desde USB sin tocar el disco. i3wm, polybar y entorno completo listo en segundos.</div>
+      <div class="feature-name" data-en="LIVE USB">LIVE USB</div>
+      <div class="feature-desc" data-en="Boots from USB without touching the disk. i3wm, polybar and a full environment ready in seconds.">Arranca desde USB sin tocar el disco. i3wm, polybar y entorno completo listo en segundos.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🖥</div>
-      <div class="feature-name">HIDPI NATIVO</div>
-      <div class="feature-desc">Detección automática de pantallas HiDPI. Escala polybar, rofi, dunst y fuentes en caliente.</div>
+      <div class="feature-name" data-en="NATIVE HIDPI">HIDPI NATIVO</div>
+      <div class="feature-desc" data-en="Automatic HiDPI display detection. Scales polybar, rofi, dunst and fonts on the fly.">Detección automática de pantallas HiDPI. Escala polybar, rofi, dunst y fuentes en caliente.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🔒</div>
-      <div class="feature-name">OFENSIVA COMPLETA</div>
-      <div class="feature-desc">Metasploit, Burp Suite, Ghidra, Bloodhound, Caido y más de 40 herramientas preinstaladas.</div>
+      <div class="feature-name" data-en="FULL OFFENSIVE">OFENSIVA COMPLETA</div>
+      <div class="feature-desc" data-en="Metasploit, Burp Suite, Ghidra, Bloodhound, Caido and 100+ preinstalled tools.">Metasploit, Burp Suite, Ghidra, Bloodhound, Caido y más de 100 herramientas preinstaladas.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">📦</div>
-      <div class="feature-name">WORDLISTS INCLUIDAS</div>
-      <div class="feature-desc">SecLists, rockyou y wfuzz disponibles en <code>~/wordlists</code> desde el primer arranque.</div>
+      <div class="feature-name" data-en="WORDLISTS INCLUDED">WORDLISTS INCLUIDAS</div>
+      <div class="feature-desc" data-en="SecLists and rockyou available from a stable path at <code>/etc/hanix-data/wordlists</code>.">SecLists y rockyou disponibles desde una ruta estable en <code>/etc/hanix-data/wordlists</code>.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⌘</div>
+      <div class="feature-name" data-en="IANIX · LOCAL AI">IANIX · IA LOCAL</div>
+      <div class="feature-desc" data-en="LLM baked into the ISO. Offline from first boot: describe the task and it writes the command; with <code>-v</code> it explains every argument. Built to learn.">LLM horneado en la ISO. Offline desde el primer arranque: le pides la tarea en español y escribe el comando; con <code>-v</code> explica cada argumento. Para aprender.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">✦</div>
-      <div class="feature-name">ESTÉTICA HACKER</div>
-      <div class="feature-desc">Tema matrix, fuentes Nerd Font, polybar personalizada. Sin compromisos entre función y forma.</div>
+      <div class="feature-name" data-en="HACKER AESTHETIC">ESTÉTICA HACKER</div>
+      <div class="feature-desc" data-en="Matrix theme, Nerd Fonts, custom polybar. No compromise between form and function.">Tema matrix, fuentes Nerd Font, polybar personalizada. Sin compromisos entre función y forma.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- IAnix · IA local -->
+<section id="ianix">
+  <p class="section-label" data-en="// ianix">// ianix</p>
+  <h2 class="section-title" data-en="Local AI that <em>teaches</em>, not one that attacks on its own">IA local que <em>enseña</em>, no que ataca sola</h2>
+  <p style="max-width:760px;margin:0 auto 32px;text-align:center;line-height:1.7;opacity:0.85;"
+     data-en="IAnix is a command assistant powered by a language model (<strong>Qwen3-4B</strong>) baked into the image itself. It runs <strong>100% offline from first boot</strong> —no Ollama, no API keys, nothing leaves your machine—. Describe the task and it writes the command; with <code>-v</code> it explains what it does and what <em>each</em> argument is for. Built to <strong>learn</strong>, not to attack on autopilot.">
+    IAnix es un asistente de comandos con un modelo de lenguaje (<strong>Qwen3-4B</strong>) horneado
+    dentro de la propia imagen. Funciona <strong>100% offline desde el primer arranque</strong> —sin
+    Ollama, sin API keys, sin que nada salga de tu máquina—. Le describes la tarea en español y te
+    escribe el comando; con <code>-v</code> te explica qué hace y para qué sirve <em>cada</em> argumento.
+    Pensado para <strong>aprender</strong>, no para atacar en piloto automático.
+  </p>
+
+  <div class="terminal-box">
+    <div class="terminal-bar">
+      <span class="dot dot-r"></span>
+      <span class="dot dot-y"></span>
+      <span class="dot dot-g"></span>
+      <span class="terminal-title">ianix -v</span>
+    </div>
+    <div class="terminal-body">
+<pre style="margin:0;white-space:pre-wrap;color:inherit;font-family:inherit;" data-en='hanix@live ~ $ <span style="color:#7fff9f;">ianix -v what is my public ip</span>
+⏱ IA: 2.1s
+
+  [A] curl -s https://ifconfig.me   · default (Enter)
+      Queries an external service and shows the public IP you use to reach the Internet.
+        curl                   HTTP client
+        -s                     quiet mode, no progress bar
+        https://ifconfig.me    external service that returns your public IP
+
+Press <b>Enter</b> to run · a <b>letter</b> for another option · <b>q</b> to cancel'>hanix@live ~ $ <span style="color:#7fff9f;">ianix -v cuál es mi ip pública</span>
+⏱ IA: 2.1s
+
+  [A] curl -s https://ifconfig.me   · por defecto (Enter)
+      Consulta un servicio externo y muestra la IP pública con la que sales a Internet.
+        curl                   cliente HTTP
+        -s                     modo silencioso, sin barra de progreso
+        https://ifconfig.me    servicio externo que devuelve tu IP pública
+
+Pulsa <b>Enter</b> para ejecutar · una <b>letra</b> para otra opción · <b>q</b> para cancelar</pre>
+    </div>
+  </div>
+
+  <div class="features-grid" style="margin-top:40px;">
+    <div class="feature-card">
+      <div class="feature-icon">📴</div>
+      <div class="feature-name" data-en="OFFLINE OUT OF THE BOX">OFFLINE DE FÁBRICA</div>
+      <div class="feature-desc" data-en="The model ships inside the ISO. Zero cloud, zero API keys, zero <code>ollama pull</code>. Air-gapped instantly.">El modelo va dentro de la ISO. Cero nube, cero API keys, cero <code>ollama pull</code>. Air-gapped al instante.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎓</div>
+      <div class="feature-name" data-en="LEARN THE WHY">APRENDE EL PORQUÉ</div>
+      <div class="feature-desc" data-en="With <code>-v</code> it explains every flag (e.g. <code>-sV</code> = detect service and version). Not a black box.">Con <code>-v</code> explica cada flag (p. ej. <code>-sV</code> = detecta servicio y versión). No es una caja negra.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡</div>
+      <div class="feature-name" data-en="SAFE BY DESIGN">SEGURO POR DISEÑO</div>
+      <div class="feature-desc" data-en="Runs as an argument list, with no shell interpreter. You confirm with Enter; destructive commands ask for an extra step.">Ejecuta como lista de argumentos, sin intérprete de shell. Tú confirmas con Enter; lo destructivo pide un extra.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧭</div>
+      <div class="feature-name" data-en="SYSTEM-AWARE">CONSCIENTE DEL SISTEMA</div>
+      <div class="feature-desc" data-en="It knows the installed tools and the real resource paths (SecLists, rockyou, nuclei templates). No made-up paths.">Conoce las herramientas instaladas y las rutas reales (SecLists, rockyou, plantillas de nuclei). Nada de rutas inventadas.</div>
     </div>
   </div>
 </section>
@@ -526,11 +604,11 @@
 
 <!-- Tools -->
 <section id="tools">
-  <p class="section-label">// arsenal</p>
-  <h2 class="section-title">Herramientas incluidas</h2>
+  <p class="section-label" data-en="// arsenal">// arsenal</p>
+  <h2 class="section-title" data-en="Included tools">Herramientas incluidas</h2>
   <div class="tools-columns">
     <div class="tool-group">
-      <h3>Explotación</h3>
+      <h3 data-en="Exploitation">Explotación</h3>
       <ul>
         <li><span>Metasploit</span></li>
         <li><span>SQLmap</span></li>
@@ -555,7 +633,7 @@
       </ul>
     </div>
     <div class="tool-group">
-      <h3>Reconocimiento</h3>
+      <h3 data-en="Reconnaissance">Reconocimiento</h3>
       <ul>
         <li><span>Nmap / Masscan</span></li>
         <li><span>Amass / Subfinder</span></li>
@@ -566,7 +644,7 @@
       </ul>
     </div>
     <div class="tool-group">
-      <h3>Ingeniería Inversa</h3>
+      <h3 data-en="Reverse Engineering">Ingeniería Inversa</h3>
       <ul>
         <li><span>Ghidra</span></li>
         <li><span>Radare2 / Cutter</span></li>
@@ -576,7 +654,7 @@
       </ul>
     </div>
     <div class="tool-group">
-      <h3>Red &amp; MITM</h3>
+      <h3 data-en="Network &amp; MITM">Red &amp; MITM</h3>
       <ul>
         <li><span>Wireshark</span></li>
         <li><span>tcpdump</span></li>
@@ -599,7 +677,7 @@
       </ul>
     </div>
     <div class="tool-group">
-      <h3>Contraseñas</h3>
+      <h3 data-en="Passwords">Contraseñas</h3>
       <ul>
         <li><span>Hashcat</span></li>
         <li><span>John the Ripper</span></li>
@@ -627,30 +705,30 @@
 
 <!-- Install -->
 <section id="install">
-  <p class="section-label">// arranque</p>
-  <h2 class="section-title">En marcha en 3 pasos</h2>
+  <p class="section-label" data-en="// boot">// arranque</p>
+  <h2 class="section-title" data-en="Up and running in 3 steps">En marcha en 3 pasos</h2>
   <div class="steps">
     <div class="step">
       <div class="step-num">1</div>
       <div class="step-content">
-        <h4>Descarga la ISO</h4>
-        <p>Descarga <code>hanix.iso</code> desde el botón de arriba o clona el repo y compila con Nix.</p>
+        <h4 data-en="Download the ISO">Descarga la ISO</h4>
+        <p data-en="Download <code>hanix.iso</code> from the button above, or clone the repo and build it with Nix.">Descarga <code>hanix.iso</code> desde el botón de arriba o clona el repo y compila con Nix.</p>
         <div class="code">nix build github:odbk/hanix#iso</div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-content">
-        <h4>Graba en USB</h4>
-        <p>Usa <code>dd</code> o cualquier grabador de imágenes. Compatible con UEFI y BIOS.</p>
+        <h4 data-en="Flash to USB">Graba en USB</h4>
+        <p data-en="Use <code>dd</code> or any image writer. Works with UEFI and BIOS.">Usa <code>dd</code> o cualquier grabador de imágenes. Compatible con UEFI y BIOS.</p>
         <div class="code">sudo dd if=hanix.iso of=/dev/sdX bs=4M status=progress</div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-content">
-        <h4>Arranca y hackea</h4>
-        <p>Arranca desde USB. Login automático con usuario <code>hanix</code> / contraseña <code>hanix</code>. i3 lanza directamente.</p>
+        <h4 data-en="Boot and hack">Arranca y hackea</h4>
+        <p data-en="Boot from USB. Auto-login with user <code>hanix</code> / password <code>hanix</code>, which belong only to the live environment. The installer creates separate credentials for the installed system.">Arranca desde USB. Login automático con usuario <code>hanix</code> / contraseña <code>hanix</code>, exclusivos del entorno live. El instalador crea credenciales distintas para el sistema final.</p>
       </div>
     </div>
   </div>
@@ -660,16 +738,16 @@
 
 <!-- Mantener actualizaciones -->
 <section id="updates">
-  <p class="section-label">// mantenimiento</p>
-  <h2 class="section-title">Mantenerse actualizado</h2>
-  <p style="color:var(--dim);max-width:640px;margin:0 auto 24px;">
+  <p class="section-label" data-en="// maintenance">// mantenimiento</p>
+  <h2 class="section-title" data-en="Stay up to date">Mantenerse actualizado</h2>
+  <p style="color:var(--dim);max-width:640px;margin:0 auto 24px;" data-en="Once installed, you can follow the project's changes without reinstalling.">
     Una vez instalado, puedes seguir los cambios del proyecto sin necesidad de reinstalar.
   </p>
   <div class="steps">
     <div class="step">
       <div class="step-num">1</div>
       <div class="step-content">
-        <h4>Añade el remoto (solo una vez)</h4>
+        <h4 data-en="Add the remote (once)">Añade el remoto (solo una vez)</h4>
         <div class="code">cd ~/hanix
 git remote add origin https://github.com/odbk/hanix
 git fetch origin
@@ -679,16 +757,16 @@ git branch --set-upstream-to=origin/main main</div>
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-content">
-        <h4>Actualiza cuando quieras</h4>
+        <h4 data-en="Update whenever you want">Actualiza cuando quieras</h4>
         <div class="code">git pull &amp;&amp; ./rebuild</div>
       </div>
     </div>
   </div>
   <details style="max-width:640px;margin:24px auto 0;color:var(--dim);font-size:13px;">
-    <summary style="cursor:pointer;color:var(--green);font-family:monospace;">// para los que saben git</summary>
-    <div style="margin-top:12px;line-height:1.7;">
+    <summary style="cursor:pointer;color:var(--green);font-family:monospace;" data-en="// for the git-savvy">// para los que saben git</summary>
+    <div style="margin-top:12px;line-height:1.7;" data-en="The installer generates a local repo with your <code>personal.nix</code> and <code>hardware-configuration.nix</code>. The first is marked <code>skip-worktree</code>; the second describes that machine's hardware and disks. If you customize other files, commit them locally before <code>git pull</code> to avoid conflicts. No push anywhere is needed — your changes stay on your machine.">
       El instalador genera un repo local con tu <code>personal.nix</code> y <code>hardware-configuration.nix</code>.
-      El primero es <code>skip-worktree</code> (git lo ignora), el segundo está en <code>.gitignore</code>.
+      El primero queda marcado como <code>skip-worktree</code>; el segundo describe el hardware y los discos concretos de esa máquina.
       Si personalizas otros archivos, commitéalos localmente antes de hacer <code>git pull</code> para evitar conflictos.
       No hace falta push a ningún sitio — tus cambios se quedan en tu máquina.
     </div>
@@ -699,20 +777,20 @@ git branch --set-upstream-to=origin/main main</div>
 
 <!-- Screenshots -->
 <section id="screenshots">
-  <p class="section-label">// aspecto</p>
-  <h2 class="section-title">Capturas de pantalla</h2>
+  <p class="section-label" data-en="// looks">// aspecto</p>
+  <h2 class="section-title" data-en="Screenshots">Capturas de pantalla</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">
     <div class="feature-card" style="padding:0;overflow:hidden;">
       <img src="screenshots/screen1.png" alt="Desktop" onclick="openLightbox(this.src)" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;cursor:zoom-in;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
-      <div style="padding:10px 14px;color:var(--dim);font-size:11px;">Escritorio — i3wm + polybar</div>
+      <div style="padding:10px 14px;color:var(--dim);font-size:11px;" data-en="Desktop — i3wm + polybar">Escritorio — i3wm + polybar</div>
     </div>
     <div class="feature-card" style="padding:0;overflow:hidden;">
       <img src="screenshots/shell.png" alt="Terminal" onclick="openLightbox(this.src)" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;cursor:zoom-in;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
-      <div style="padding:10px 14px;color:var(--dim);font-size:11px;">Terminal — fastfetch + herramientas</div>
+      <div style="padding:10px 14px;color:var(--dim);font-size:11px;" data-en="Terminal — fastfetch + tools">Terminal — fastfetch + herramientas</div>
     </div>
     <div class="feature-card" style="padding:0;overflow:hidden;">
       <img src="screenshots/greetd.png" alt="Login" onclick="openLightbox(this.src)" style="width:100%;display:block;border-radius:4px;transition:transform 0.3s;cursor:zoom-in;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
-      <div style="padding:10px 14px;color:var(--dim);font-size:11px;">Login — tuigreet personalizado</div>
+      <div style="padding:10px 14px;color:var(--dim);font-size:11px;" data-en="Login — custom tuigreet">Login — tuigreet personalizado</div>
     </div>
   </div>
 </section>
@@ -725,16 +803,38 @@ git branch --set-upstream-to=origin/main main</div>
   <p>
     <a href="https://github.com/odbk/hanix" target="_blank">github.com/odbk/hanix</a>
     &nbsp;·&nbsp;
-    <a href="https://nixos.org" target="_blank">NixOS 25.11</a>
+    <a href="https://nixos.org" target="_blank">NixOS 25.11 · HaNiX 26.04</a>
   </p>
   <br>
-  <p style="color:#2a2a2a">Para uso en entornos autorizados. El autor no se hace responsable del uso indebido.</p>
+  <p style="color:#2a2a2a" data-en="For use in authorized environments only. The author is not responsible for misuse.">Para uso en entornos autorizados. El autor no se hace responsable del uso indebido.</p>
 </footer>
 
 <!-- Lightbox -->
 <div id="lightbox" onclick="closeLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;cursor:zoom-out;align-items:center;justify-content:center;">
   <img id="lightbox-img" style="max-width:92vw;max-height:92vh;border:1px solid #1f3b1f;box-shadow:0 0 40px rgba(0,255,65,0.15);border-radius:4px;" />
 </div>
+
+<script>
+  // ── Toggle de idioma ES/EN ──
+  (function () {
+    var btn = document.getElementById('langToggle');
+    function apply(lang) {
+      document.querySelectorAll('[data-en]').forEach(function (el) {
+        if (el.dataset.es === undefined) el.dataset.es = el.innerHTML;
+        el.innerHTML = (lang === 'en') ? el.dataset.en : el.dataset.es;
+      });
+      document.documentElement.lang = lang;
+      btn.textContent = (lang === 'en') ? 'ES' : 'EN';
+      try { localStorage.setItem('hanix-lang', lang); } catch (e) {}
+    }
+    var saved = 'es';
+    try { saved = localStorage.getItem('hanix-lang') || 'es'; } catch (e) {}
+    btn.addEventListener('click', function () {
+      apply(document.documentElement.lang === 'en' ? 'es' : 'en');
+    });
+    apply(saved);
+  })();
+</script>
 
 <script>
   function openLightbox(src) {
@@ -756,8 +856,9 @@ git branch --set-upstream-to=origin/main main</div>
 
   // ── Terminal typing effect ──
   const lines = [
+    { cmd: 'ianix --solo-mostrar fuzzea https://objetivo.test/FUZZ', out: '[1] FFUF  [2] Feroxbuster  [3] Gobuster  [4] Wfuzz' },
     { cmd: 'uname -a', out: 'Linux hanix 6.12 NixOS 25.11 x86_64' },
-    { cmd: 'ls ~/wordlists/seclists/Discovery/Web-Content/', out: 'big.txt  common.txt  raft-large-words.txt  ...' },
+    { cmd: 'ls /etc/hanix-data/wordlists/seclists/Discovery/Web-Content/', out: 'big.txt  common.txt  raft-large-words.txt  ...' },
     { cmd: 'nmap -sV --open -T4 10.10.10.1', out: 'PORT   STATE SERVICE  VERSION\n80/tcp open  http     Apache 2.4.51' },
     { cmd: 'msfconsole -q -x "use exploit/multi/handler"', out: '[*] Using configured payload generic/shell_reverse_tcp' },
   ];

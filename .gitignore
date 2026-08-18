@@ -6,6 +6,7 @@ hardware-configuration.nix
 
 # Salida de nix build (ISOs, derivaciones...)
 result
+.ianix/
 result-*
 
 # Archivos de editor
@@ -13,3 +14,10 @@ result-*
 .envrc
 *.swp
 *~
+
+# Datos personales / recon de infraestructura propia — NUNCA al repo
+infutura.txt
+
+# Cachés de Python
+__pycache__/
+*.pyc

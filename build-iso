@@ -3,6 +3,7 @@
 # Uso: ./build-iso [argumentos extra para nix build]
 
 FLAKE="$(dirname "$(readlink -f "$0")")"
+FLAKE_REF="path:$FLAKE"
 LOG="/tmp/hanix-iso-build-$(date +%Y%m%d-%H%M%S).log"
 
 echo "=== HaNiX ISO build — $(date) ===" | tee "$LOG"
@@ -10,7 +11,9 @@ echo "Log: $LOG"
 echo ""
 
 # nix build con salida verbose — cada línea "building '...'" tiene timestamp
-nix build "$FLAKE#iso" --impure \
+# `path:` incluye también los archivos nuevos del árbol de trabajo. Sin él,
+# Nix detecta el repositorio Git y omite los archivos todavía no registrados.
+nix build "$FLAKE_REF#iso" --impure \
     --log-format internal-json -v "$@" 2>&1 \
     | while IFS= read -r line; do
         echo "[$(date +%H:%M:%S)] $line" | tee -a "$LOG"
